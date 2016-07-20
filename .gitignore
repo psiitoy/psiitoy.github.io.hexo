@@ -1,0 +1,17 @@
+.DS_Store
+Thumbs.db
+db.json
+*.log
+node_modules/
+public/
+.deploy*/
+
+#MAVEN
+target/
+
+# IDEA
+*.iml
+*.iws
+.idea/
+*.ipr
+*.log
