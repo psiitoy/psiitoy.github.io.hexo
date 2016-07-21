@@ -28,13 +28,15 @@ category: 博客
 ## 二、具体部署方案
 ### 主要针对对以上技术有大概了解的朋友，作为一个最佳实践来记录。以后再上图。
     
-* #### 1)当然是先申请github,在此不再赘述。需要注意的是要申请两个，一个是username.github.io存放页面，另一个是username.github.io.hexo存放hexo项目文件方便迁移。
-    *   username.github.io只需要申请，发布只需要配置好_config.yml文件的deploy属性，通过hexo d发布
-    *   username.github.io.hexo分为初次构建(从头搞起来hexo)和二次构建(已经有hexo框架只是重新下项目)
-        *   初次  构建hexo项目，删除themes里面的git信息，删除项目根目录下的.depoly_git文件夹，修改.gitignore文件
-        *   二次
+* #### 1)当然是先申请github,在此不再赘述。需要注意的是要申请两个
+    *   username.github.io只需要申请下来存放页面，发布只需要配置好_config.yml文件的deploy属性，通过hexo d发布
+    *   username.github.io.hexo 整个hexo完整项目,方便迁移，多机协作。 
         
-* #### 2)
+* #### 2)在项目中安装hexo，并按照其规则把主题样式放在themes里面(我们选择的是yilia)，并配置好_config.yml
+
+* #### 3)扩展网站功能，安装扩展插件比如评论、百度统计。
+
+* #### 4)编写md文件，可以写博文啦。
 
 
 hexo 构建前(项目文件)
@@ -48,4 +50,12 @@ _config.yml  package.json  scaffolds  source  themes
 npm install hexo --save
 hexo init 之后出现了db.json public node_modules 同时 git信息都没了...T.T
 别急 git init
-然后 
+然后
+git remote add origin git@github.com:psiitoy/psiitoy.github.io.hexo.git
+git checkout master 发现有冲突 是因为_config.yml package.json 在hexo init的时候改变了 恢复
+git pull origin master
+git push -u origin master
+
+git config --global push.default simple 只推送当前分支到远程关联的同名分支，即 'git push' 推送当前分支
+
+ok了(idea暂时只能commit不能push待解决)
