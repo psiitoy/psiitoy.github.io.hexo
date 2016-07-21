@@ -48,4 +48,4 @@ _config.yml  package.json  scaffolds  source  themes
 npm install hexo --save
 hexo init 之后出现了db.json public node_modules 同时 git信息都没了...T.T
 别急 git init
-然后
+然后 
