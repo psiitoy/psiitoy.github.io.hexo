@@ -31,7 +31,20 @@ category: 博客
 * #### 1)当然是先申请github,在此不再赘述。需要注意的是要申请两个，一个是username.github.io存放页面，另一个是username.github.io.hexo存放hexo项目文件方便迁移。
     *   username.github.io只需要申请，发布只需要配置好_config.yml文件的deploy属性，通过hexo d发布
     *   username.github.io.hexo分为初次构建(从头搞起来hexo)和二次构建(已经有hexo框架只是重新下项目)
-        *   初次
+        *   初次  构建hexo项目，删除themes里面的git信息，删除项目根目录下的.depoly_git文件夹，修改.gitignore文件
         *   二次
+        
 * #### 2)
+
+
+hexo 构建前(项目文件)
+_config.yml  node_modules  public     source
+db.json      package.json  scaffolds  themes
+
+hexo 构建后(github上存放的文件)
+_config.yml  package.json  scaffolds  source  themes
+
+初次
+npm install hexo --save
+hexo init 之后出现了db.json public node_modules 同时 git信息都没了...T.T
 
