@@ -11,6 +11,15 @@ category: 博客
 
 <!--more-->
 
+``` java
+$git clone https://github.com/psiitoy/psiitoy.github.io.hexo.git
+```
+
+``` java
+public static void main(){
+}
+```
+
 技术选型为github+hexo+idea，首先最简单的阐述下这个东西都干嘛的
 ## 一、技术选型
 
@@ -29,7 +38,7 @@ category: 博客
 ### 主要针对对以上技术有大概了解的朋友，作为一个最佳实践来记录。以后再上图。
     
 * #### 1)当然是先申请github,在此不再赘述。需要注意的是要申请两个
-    *   username.github.io只需要申请下来存放页面，发布只需要配置好_config.yml文件的deploy属性，通过hexo d发布
+    *   username.github.io只需要申请下来存放页面，发布只需要配置好_config.yml文件的deploy属性，通过`hexo d`发布
     *   username.github.io.hexo 整个hexo完整项目,方便迁移，多机协作。 
         
 * #### 2)在项目中安装hexo，并按照其规则把主题样式放在themes里面(我们选择的是yilia)，并配置好_config.yml
@@ -38,24 +47,101 @@ category: 博客
 
 * #### 4)编写md文件，可以写博文啦。
 
+### 废话少说上代码，注意以下针对已经构建好的项目，再次迁移。
 
-hexo 构建前(项目文件)
-_config.yml  node_modules  public     source
-db.json      package.json  scaffolds  themes
+>   克隆项目
 
-hexo 构建后(github上存放的文件)
-_config.yml  package.json  scaffolds  source  themes
+```bash
+$git clone https://github.com/psiitoy/psiitoy.github.io.hexo.git
+```
 
-初次
-npm install hexo --save
-hexo init 之后出现了db.json public node_modules 同时 git信息都没了...T.T
-别急 git init
-然后
-git remote add origin git@github.com:psiitoy/psiitoy.github.io.hexo.git
-git checkout master 发现有冲突 是因为_config.yml package.json 在hexo init的时候改变了 恢复
-git pull origin master
-git push -u origin master
+>   安装hexo
 
-git config --global push.default simple 只推送当前分支到远程关联的同名分支，即 'git push' 推送当前分支
+```bash
+$npm install hexo --save
+```
 
-ok了(idea暂时只能commit不能push待解决)
+>   初始化hexo
+
+```bash
+$hexo init
+
+```
+
+>>  `hexo init`构建前项目结构_config.yml  package.json  scaffolds  source  themes
+>>  `hexo init`构建后项目结构_config.yml  package.json  scaffolds  source  themes  node_modules  public   db.json
+>>  多了三个文件`db.json` `public` `node_modules`,同时git信息都没了...T.T,不慌继续
+
+>   hexo的文件结构
+
+```bash
+_config.yml     #主站的配置文件
+node_modules  
+package.json    #应用程序的信息
+scaffolds       #模版文件夹，新建文章时会根据 scaffold里对应md生成文件
+source          #存放用户资源，除 _posts 文件夹之外， _ 开头的文件/和隐藏的文件将会被忽略
+themes          #主题文件夹
+
+```
+
+>   初始化git
+
+```bash
+$git init
+
+```
+
+>   追踪项目
+
+```bash
+$git remote add origin git@github.com:psiitoy/psiitoy.github.io.hexo.git
+
+```
+
+>   纳入版本控制
+
+```bash
+$git add .
+
+```
+
+>   更新分支
+
+```bash
+$git pull origin master
+
+```
+
+>   设置'git push'只提交当前分支
+
+```bash
+$git config --global push.default simple
+
+```
+
+>   注意还原`_config.yml`文件，我们在执行`hexo init`的时候重置了
+
+>   ok了(idea暂时只能commit不能push待解决)，一切git操作交给命令行
+
+
+### hexo备注 
+
+一些常用命令：
+
+	hexo new "postName" #新建文章
+	hexo new page "pageName" #新建页面
+	hexo generate #生成静态页面至public目录
+	hexo server #开启预览访问端口（默认端口4000，'ctrl + c'关闭server）
+	hexo deploy #将.deploy目录部署到GitHub
+	hexo help  # 查看帮助
+	hexo version  #查看Hexo的版本
+	
+## Markdown语法参考链接
+[很实用的例子](https://www.zybuluo.com/mdeditor)
+
+## Hexo参考链接
+
+## 一些写的比较好的HEXO建站文章
+[通过Hexo在GitHub搭站全记录](https://anonymalias.github.io/2016/01/14/hexo-construct-homepage/)
+[HEXO搭建个人博客](http://baixin.io/2015/08/HEXO%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/)
+[搭建 Hexo 博客--增强篇](http://www.jianshu.com/p/2640561e96f8)
