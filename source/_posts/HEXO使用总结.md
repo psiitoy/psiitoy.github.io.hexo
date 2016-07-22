@@ -11,15 +11,6 @@ category: 博客
 
 <!--more-->
 
-``` java
-$git clone https://github.com/psiitoy/psiitoy.github.io.hexo.git
-```
-
-``` java
-public static void main(){
-}
-```
-
 技术选型为github+hexo+idea，首先最简单的阐述下这个东西都干嘛的
 ## 一、技术选型
 
@@ -63,19 +54,20 @@ cd psiitoy.github.io.hexo
 ```
 
 
->   安装hexo，添加git插件支持
+>   安装hexo
 
 ```bash
 $npm install hexo --save
-$npm install hexo-deployer-git --save
+
 
 ```
 
 
->   初始化hexo
+>   初始化hexo，添加git插件支持
 
 ```bash
 $hexo init --no-clone
+$npm install hexo-deployer-git --save
 
 ```
 
@@ -134,14 +126,11 @@ $git pull origin master
 ```
 
 
->   然后运行idea rebase并且解决冲突(git能力有限，交给idea搞了)1，revert冲突文件，2,commit,3,rebase)
+>   然后运行idea rebase并且解决冲突(git能力有限，交给idea搞了)
 
 >>  revert冲突文件
 >>  commit解决冲突
 >>  rebase到远程分支
-
-
->   注意还原`_config.yml`文件，我们在执行`hexo init`的时候重置了
 
 
 >   ok了(idea暂时只能commit不能push待解决)，一切git操作交给命令行
@@ -164,10 +153,7 @@ $git pull origin master
 [很实用的例子](https://www.zybuluo.com/mdeditor)
 
 
-## Hexo参考链接
-
-
-## 一些写的比较好的HEXO建站文章
+#### Hexo参考链接
 [通过Hexo在GitHub搭站全记录](https://anonymalias.github.io/2016/01/14/hexo-construct-homepage/)
 [HEXO搭建个人博客](http://baixin.io/2015/08/HEXO%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/)
 [搭建 Hexo 博客--增强篇](http://www.jianshu.com/p/2640561e96f8)
