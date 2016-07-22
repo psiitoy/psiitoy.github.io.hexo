@@ -28,11 +28,17 @@ public static void main(){
     *   发布网站。(将hexo生成的网站推送到username.github.io上)
     *   版本控制。(将整个网站的源文件推送到另一个repo上，便于网站开发环境迁移，多机工作等)
 
+
 * #### 2)hexo
-    *   生成博客框架页面，同样产品jekyll相对来说更复杂，实验过后还是选择hexo。(可以通过md解析文章渲染页面，多种风格支持，扩展插件丰富)。
+    *   生成博客框架页面，可以通过md解析文章渲染页面，然后发布到github上，多种风格支持，扩展插件丰富。
+    *   顺便对比下`hexo`和`jekyll`
+        *   hexo 基于`nodejs`，实施起来简便。
+        *   jekyll 基于`ruby`，实施起来折腾。 但是支持在线编辑
       
+              
 * #### 3)idea
     *   工作环境，写作环境。(git插件支持强大，md支持预览)
+ 
  
 ## 二、具体部署方案
 ### 主要针对对以上技术有大概了解的朋友，作为一个最佳实践来记录。以后再上图。
@@ -53,24 +59,31 @@ public static void main(){
 
 ```bash
 $git clone https://github.com/psiitoy/psiitoy.github.io.hexo.git
+cd psiitoy.github.io.hexo
 ```
 
->   安装hexo
+
+>   安装hexo，添加git插件支持
 
 ```bash
 $npm install hexo --save
+$npm install hexo-deployer-git --save
+
 ```
+
 
 >   初始化hexo
 
 ```bash
-$hexo init
+$hexo init --no-clone
 
 ```
+
 
 >>  `hexo init`构建前项目结构_config.yml  package.json  scaffolds  source  themes
 >>  `hexo init`构建后项目结构_config.yml  package.json  scaffolds  source  themes  node_modules  public   db.json
 >>  多了三个文件`db.json` `public` `node_modules`,同时git信息都没了...T.T,不慌继续
+
 
 >   hexo的文件结构
 
@@ -84,12 +97,17 @@ themes          #主题文件夹
 
 ```
 
->   初始化git
+
+>   初始化git，设置'git push'只提交当前分支，禁用lf自动转换，禁用中文文件名转换
 
 ```bash
 $git init
+$git config --global push.default simple
+$git config --global core.autocrlf false
+$git config --global core.quotepath false
 
 ```
+
 
 >   追踪项目
 
@@ -98,12 +116,15 @@ $git remote add origin git@github.com:psiitoy/psiitoy.github.io.hexo.git
 
 ```
 
+
 >   纳入版本控制
 
 ```bash
 $git add .
+$git commit -m 'first commit'
 
 ```
+
 
 >   更新分支
 
@@ -112,14 +133,16 @@ $git pull origin master
 
 ```
 
->   设置'git push'只提交当前分支
 
-```bash
-$git config --global push.default simple
+>   然后运行idea rebase并且解决冲突(git能力有限，交给idea搞了)1，revert冲突文件，2,commit,3,rebase)
 
-```
+>>  revert冲突文件
+>>  commit解决冲突
+>>  rebase到远程分支
+
 
 >   注意还原`_config.yml`文件，我们在执行`hexo init`的时候重置了
+
 
 >   ok了(idea暂时只能commit不能push待解决)，一切git操作交给命令行
 
@@ -135,11 +158,14 @@ $git config --global push.default simple
 	hexo deploy #将.deploy目录部署到GitHub
 	hexo help  # 查看帮助
 	hexo version  #查看Hexo的版本
+
 	
 ## Markdown语法参考链接
 [很实用的例子](https://www.zybuluo.com/mdeditor)
 
+
 ## Hexo参考链接
+
 
 ## 一些写的比较好的HEXO建站文章
 [通过Hexo在GitHub搭站全记录](https://anonymalias.github.io/2016/01/14/hexo-construct-homepage/)
