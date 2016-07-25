@@ -3,11 +3,14 @@ layout: post
 title: "HEXO使用总结"
 date: 2015-08-25 21:15:06 
 description: "HEXO配置，HEXO+Github，搭建自己的博客"
-category: 博客
+categories: 
+    - 博客
+tags:
+    - hexo
+    - github
 ---
 
 本文将总结性的介绍如何建立自己的github.io博客，后续会持续补充，进阶。感谢[baixin](https://baixin.io)提供的参考文章。
-
 
 <!--more-->
 
@@ -38,7 +41,7 @@ category: 博客
     *   username.github.io只需要申请下来存放页面，发布只需要配置好_config.yml文件的deploy属性，通过`hexo d`发布
     *   username.github.io.hexo 整个hexo完整项目,方便迁移，多机协作。 
         
-* #### 2)在项目中安装hexo，并按照其规则把主题样式放在themes里面(我们选择的是yilia)，并配置好_config.yml
+* #### 2)在项目中安装hexo，并按照其规则把主题样式放在themes里面(我们选择的是next)，并配置好_config.yml
 
 * #### 3)扩展网站功能，安装扩展插件比如评论、百度统计。
 
@@ -157,3 +160,5 @@ $git pull origin master
 [通过Hexo在GitHub搭站全记录](https://anonymalias.github.io/2016/01/14/hexo-construct-homepage/)
 [HEXO搭建个人博客](http://baixin.io/2015/08/HEXO%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/)
 [搭建 Hexo 博客--增强篇](http://www.jianshu.com/p/2640561e96f8)
+[next主题的配置和优化](http://blog.csdn.net/willxue123/article/details/50994852)
+[HEXO增加标签页、分类页](https://github.com/iissnan/hexo-theme-next/wiki/) 的创建分类页面
