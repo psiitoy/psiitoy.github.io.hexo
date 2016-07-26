@@ -208,13 +208,13 @@ $(document).ready(function () {
       hasElement($title) && sequence.push({
         e: $title,
         p: {opacity: 1, top: 0},
-        o: { duration: 200 }
+        o: { duration: 80 }
       });
 
       hasElement($subtitle) && sequence.push({
         e: $subtitle,
         p: {opacity: 1, top: 0},
-        o: {duration: 200}
+        o: {duration: 80}
       });
 
       if (sequence.length > 0) {
