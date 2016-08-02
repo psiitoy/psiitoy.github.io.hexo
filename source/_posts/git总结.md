@@ -149,6 +149,12 @@ $ git checkout <name>
 $ git branch
 ```
 
+> 查看所有分支信息，版本号和描述
+
+```bash
+$ git branch -va
+```
+
 > 切换分支
 
 ```bash
@@ -228,6 +234,12 @@ $ git remote
 origin
 ```
 
+> 查看所有远程库分支信息
+
+```bash
+$ git remote show origin
+```
+
 > 查看远程库更详细的信息，是否有权限抓取`fetch`和推送`push`
 
 ```bash
@@ -247,6 +259,18 @@ $ git push origin <branchName>
 ```bash
 $ git branch --set-upstream dev origin/dev
 Branch dev set up to track remote branch dev from origin.
+```
+
+> `git pull`和`git fetch`的区别
+>> `git fetch <远程主机名> <分支名>`将某个远程主机的更新，全部取回本地。默认取回所有分支的更新。
+>> `pull`相当于`fetch`+`merge`
+>> 加上`-p`可以删除远程已经删除的分支
+
+```bash
+$ git pull -p
+# 等同于下面的命令
+$ git fetch --prune origin 
+$ git fetch -p
 ```
 
 > 多人协作的工作模式通常是这样：
