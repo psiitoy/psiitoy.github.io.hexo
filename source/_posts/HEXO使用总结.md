@@ -52,7 +52,7 @@ tags:
 >   克隆项目
 
 ```bash
-$git clone https://github.com/psiitoy/psiitoy.github.io.hexo.git
+$ git clone https://github.com/psiitoy/psiitoy.github.io.hexo.git
 cd psiitoy.github.io.hexo
 ```
 
@@ -60,7 +60,7 @@ cd psiitoy.github.io.hexo
 >   安装hexo
 
 ```bash
-$npm install hexo --save
+$ npm install hexo --save
 
 
 ```
@@ -69,8 +69,8 @@ $npm install hexo --save
 >   初始化hexo，添加git插件支持
 
 ```bash
-$hexo init --no-clone
-$npm install hexo-deployer-git --save
+$ hexo init --no-clone
+$ npm install hexo-deployer-git --save
 
 ```
 
@@ -96,10 +96,10 @@ themes          #主题文件夹
 >   初始化git，设置'git push'只提交当前分支，禁用lf自动转换，禁用中文文件名转换
 
 ```bash
-$git init
-$git config --global push.default simple
-$git config --global core.autocrlf false
-$git config --global core.quotepath false
+$ git init
+$ git config --global push.default simple
+$ git config --global core.autocrlf false
+$ git config --global core.quotepath false
 
 ```
 
@@ -107,7 +107,7 @@ $git config --global core.quotepath false
 >   追踪项目
 
 ```bash
-$git remote add origin git@github.com:psiitoy/psiitoy.github.io.hexo.git
+$ git remote add origin git@github.com:psiitoy/psiitoy.github.io.hexo.git
 
 ```
 
@@ -115,8 +115,8 @@ $git remote add origin git@github.com:psiitoy/psiitoy.github.io.hexo.git
 >   纳入版本控制
 
 ```bash
-$git add .
-$git commit -m 'first commit'
+$ git add .
+$ git commit -m 'first commit'
 
 ```
 
@@ -124,7 +124,7 @@ $git commit -m 'first commit'
 >   更新分支
 
 ```bash
-$git pull origin master
+$ git pull origin master
 
 ```
 

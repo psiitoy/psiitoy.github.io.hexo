@@ -14,4 +14,3 @@ target/
 *.iws
 .idea/
 *.ipr
-*.log
