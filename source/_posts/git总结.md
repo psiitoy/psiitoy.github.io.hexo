@@ -40,7 +40,7 @@ $ git config --globalcore.quotepath false
 >> `false`提交检出均不转换
 
 ```bash
-$git config --global core.autocrlf false
+$ git config --global core.autocrlf false
 ```
 
 > 拒绝提交包含混合换行符的文件
@@ -49,13 +49,13 @@ $git config --global core.autocrlf false
 >> `warn`警告
 
 ```bash
-git config --global core.safecrlf true   
+$ git config --global core.safecrlf true   
 ```
 
 > 简易推送，意味着如果没有指定分支，推送当前分支
 
 ```bash
-$git config --global push.default simple
+$ git config --global push.default simple
 ```
 
 ## 查看版本信息
