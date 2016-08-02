@@ -28,6 +28,36 @@ $ git config --global user.email "email@example.com"
 $ git config --global color.ui true
 ```
 
+> 防止中文文件名或者路径转义成xxx
+
+```bash
+$ git config --globalcore.quotepath false
+```
+
+> 回车符号自动转换
+>> `true`提交时转换为LF，检出时转换为CRLF
+>> `input`提交时转换为LF，检出时不转换
+>> `false`提交检出均不转换
+
+```bash
+$git config --global core.autocrlf false
+```
+
+> 拒绝提交包含混合换行符的文件
+>> `true`拒绝
+>> `false`允许
+>> `warn`警告
+
+```bash
+git config --global core.safecrlf true   
+```
+
+> 简易推送，意味着如果没有指定分支，推送当前分支
+
+```bash
+$git config --global push.default simple
+```
+
 ## 查看版本信息
 
 ```bash
