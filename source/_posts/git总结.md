@@ -357,12 +357,24 @@ $ git config --global alias.st status
 $ git config --global alias.co checkout
 $ git config --global alias.ci commit
 $ git config --global alias.br branch
+
 ```
 
 > 甚至还有人丧心病狂地把`lg`配置成了：`git lg`
 
 ```bash
 git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+```
+
+## 不小心提交错了不想纳入版本管理的文件(`gitignore`不起作用)
+
+> 明明写好了规则,但问题不起作用,每次还是重复提交,无法忍受.其实这个文件里的规则对已经追踪的文件是没有效果的.所以我们需要使用rm命令清除一下相关的缓存内容.这样文件将以未追踪的形式出现.然后再重新添加提交一下,.gitignore文件里的规则就可以起作用了。
+
+```bash
+$ git rm -r --cached .
+$ git add .
+$ git commit -m 'update .gitignore'
+
 ```
 
 ## git学习参考链接
