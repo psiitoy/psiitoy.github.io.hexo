@@ -377,6 +377,23 @@ $ git commit -m 'update .gitignore'
 
 ```
 
+## 运用shh -T -v git@github.com查看具体出错信息，再根据信息来调试
+
+```bash
+$ ssh -T psiitoy@git.com
+Welcome to GitLab, psiitoy!
+
+$ ssh -vT psiitoy@git.com
+...
+
+```
+
+## 清理远端，已经合并过的分支
+
+```bash
+$ git br -r --merged | egrep -v "origin/master|origin/HEAD" | sed 's/origin\//:/g' | xargs git push origin
+```
+
 ## git学习参考链接
 [廖雪峰Git教程](http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)
 [git简易指南](http://www.bootcss.com/p/git-guide/)
