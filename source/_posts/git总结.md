@@ -96,6 +96,11 @@ $ git reset --hard HEAD^
 $ git reset --hard commit_id
 ```
 
+> 本地master分支reset之后push的时候要加上-f参数
+```
+$ git push -f origin master 
+```
+
 ## 撤销更改
 
 > 撤销单个文件的更改，使改文件返回add之前的状态 
