@@ -217,7 +217,6 @@ jproxy 实践
 
 
 线上jproxy问题
-20160713-线上问题处理-阎华-商家内部中心7月13日访问JProxy出错导致的可用率下降
 原因 LVS 不恰当修改
 需要更加熟悉JProxy提供的监控工具（ http://jmonitor.xx.com/ ）来第一时间掌握更多信息，以便和JProxy团队进行更高效的协作
 另外jproxy要提供更可靠的服务
