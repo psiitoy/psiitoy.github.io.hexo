@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Elasticsearch同Solr对比"
-date: 2017-04-27 21:15:06 
+date: 2016-04-27 21:15:06 
 description: "Elasticsearch同Solr对比"
 categories: 
     - 缓存
