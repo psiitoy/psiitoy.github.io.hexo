@@ -17,7 +17,8 @@ disruptor总结
 有说
 1. 正如前面说的，预分配RingBuffer，防止GC。
 2. 去掉锁，因为锁太耗时了，可以用CAS指令或者内存屏障达到这一目的。
-3. 缓存填充，这样可以避免伪共享。
+3. 缓存填充，这样可以避免伪共享。cpu从不直接读取主存，都是通过cache间接访问主存。cache line是能被cache处理的
+最小单元，典型的大小为32,64,128bytes
 
 也有说
 1.padding 避免伪共享 槽挂载的对象 槽 生产者seq 消费者每个seq 都作了padding 避免false sharing
