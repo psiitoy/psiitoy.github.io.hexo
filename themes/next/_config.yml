@@ -244,7 +244,7 @@ mathjax:
 baidu_analytics: 3523bddfbd122a55e434105b7fd38084
 
 # Duoshuo ShortName
-duoshuo_shortname: psiitoy
+#duoshuo_shortname: psiitoy
 
 # Disqus
 #disqus_shortname:
@@ -277,11 +277,15 @@ duoshuo_shortname: psiitoy
 # Make duoshuo show UA
 # user_id must NOT be null when admin_enable is true!
 # you can visit http://dev.duoshuo.com get duoshuo user id.
-duoshuo_info:
-  ua_enable: true
-  admin_enable: true
-  user_id: 6309035688041907000
-  admin_nickname: 主编大人
+#duoshuo_info:
+#  ua_enable: true
+#  admin_enable: true
+#  user_id: 6309035688041907000
+#  admin_nickname: 主编大人
+
+#changyan
+changyan_appid: cyt09HpmK
+changyan_appkey: 6f1cbab45764c9f07e8f308faa65b883
 
 
 # Facebook SDK Support.
