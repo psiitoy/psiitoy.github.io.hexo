@@ -98,6 +98,7 @@
             {% elseif theme.changyan_appid and theme.changyan_appkey %}
               <!--noindex-->
               <span class="post-comments-count">
+                   &nbsp; | &nbsp;
               	   <a href="{{ url_for(post.path) }}#SOHUCS" itemprop="discussionUrl">
               	     <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="{{ post.path }}" itemprop="commentsCount"></span>
                   </a>
