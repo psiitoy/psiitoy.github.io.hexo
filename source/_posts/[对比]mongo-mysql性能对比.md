@@ -1,12 +1,13 @@
 ---
 layout: post
-title: "mongo-mysql性能对比"
+title: "[对比]mongo-mysql性能对比"
 date: 2016-07-25 21:15:06 
 description: "mongo-mysql性能对比"
 categories: 
-    - mongo-mysql性能对比
+    - 对比
 tags:
-    - mongo-mysql性能对比
+    - mongo
+    - mysql
 ---
 
 索引总结

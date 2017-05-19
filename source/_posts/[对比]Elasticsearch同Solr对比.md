@@ -1,12 +1,13 @@
 ---
 layout: post
-title: "Elasticsearch同Solr对比"
+title: "[对比]Elasticsearch同Solr对比"
 date: 2016-04-27 21:15:06 
 description: "Elasticsearch同Solr对比"
 categories: 
-    - 缓存
+    - 对比
 tags:
-    - Elastic
+    - es
+    - solr
 ---
 
 Elasticsearch同Solr对比

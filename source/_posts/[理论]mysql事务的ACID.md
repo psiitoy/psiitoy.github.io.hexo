@@ -1,12 +1,13 @@
 ---
 layout: post
-title: "mysql事务的ACID"
+title: "[理论]mysql事务的ACID"
 date: 2016-07-25 21:15:06 
 description: "mysql事务的ACID"
 categories: 
-    - db
+    - 理论
 tags:
     - mysql
+    - 事务
 ---
 
 mysql事务的ACID

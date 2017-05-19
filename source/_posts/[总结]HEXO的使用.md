@@ -1,11 +1,12 @@
 ---
 layout: post
-title: "HEXO使用总结"
+title: "[总结]HEXO的使用"
 date: 2016-07-25 16:15:06 
 description: "HEXO配置，HEXO+Github，搭建自己的博客"
 categories: 
-    - 博客
+    - 总结
 tags:
+    - blog
     - hexo
     - github
 ---

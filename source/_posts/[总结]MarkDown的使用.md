@@ -1,11 +1,12 @@
 ---
 layout: post
-title: "MarkDown使用总结"
+title: "[总结]MarkDown的使用"
 date: 2016-07-25 21:15:06 
 description: "MarkDown使用总结"
 categories: 
-    - 书写语言
+    - 总结
 tags:
+    - 书写语言
     - md
 ---
 

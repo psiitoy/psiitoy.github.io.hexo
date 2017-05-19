@@ -1,15 +1,16 @@
 ---
 layout: post
-title: "docker使用总结"
+title: "[总结]docker的使用"
 date: 2016-07-25 21:15:06 
-description: "docker使用总结"
+description: "docker的使用"
 categories: 
-    - docker
+    - 总结
 tags:
     - docker
+    - 分布式
 ---
 
-docker使用总结
+docker的使用
 
 <!--more-->
 

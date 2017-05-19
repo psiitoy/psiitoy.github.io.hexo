@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "maven总结"
+title: "[总结]maven总结"
 date: 2016-07-25 21:15:06 
 description: "disruptor总结"
 categories: 
-    - maven
+    - 总结
 tags:
     - maven
 ---

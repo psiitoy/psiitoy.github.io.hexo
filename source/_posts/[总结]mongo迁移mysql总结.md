@@ -1,12 +1,14 @@
 ---
 layout: post
-title: "多线程总结"
+title: "[总结]mongo迁移mysql总结"
 date: 2016-07-25 21:15:06 
 description: "多线程总结"
 categories: 
-    - mongo迁移mysql总结
+    - 总结
 tags:
-    - mongo迁移mysql总结
+    - mongo
+    - mysql
+    - 数据迁移
 ---
 
 mongo迁移mysql总结

@@ -1,15 +1,16 @@
 ---
 layout: post
-title: "CAP和BASE理论"
+title: "[理论]CAP和BASE"
 date: 2016-07-25 21:15:06 
 description: "CAP和BASE理论"
 categories: 
-    - CAP和BASE理论
+    - 理论
 tags:
-    - CAP和BASE理论
+    - CAP和BASE
+    - 分布式
 ---
 
-CAP和BASE理论
+CAP和BASE
 
 <!--more-->
 

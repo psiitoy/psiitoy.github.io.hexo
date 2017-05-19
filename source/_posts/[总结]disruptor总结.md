@@ -1,12 +1,13 @@
 ---
 layout: post
-title: "disruptor总结"
+title: "[总结]disruptor总结"
 date: 2016-07-25 21:15:06 
 description: "disruptor总结"
 categories: 
-    - disruptor
+    - 总结
 tags:
-    - 多线程
+    - disruptor
+    - 高并发
     - 开源框架
 ---
 

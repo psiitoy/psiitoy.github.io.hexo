@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "Elasticsearch使用总结"
+title: "[总结]Elasticsearch的使用"
 date: 2016-07-25 21:15:06 
 description: "Elasticsearch使用总结"
 categories: 
-    - 缓存
+    - 总结
 tags:
-    - Elastic
+    - es
 ---
 
 Elasticsearch使用总结

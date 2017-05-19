@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "java锁总结"
+title: "[总结]java锁"
 date: 2016-07-25 21:15:06 
 description: "java锁总结"
 categories: 
-    - java锁总结
+    - 总结
 tags:
     - lock
 ---

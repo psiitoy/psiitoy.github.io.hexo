@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "git总结"
+title: "[总结]git总结"
 date: 2016-08-01 10:45:06 
 description: "git总结"
 categories: 
-    - git
+    - 总结
 tags:
     - git
 ---

@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "mysql总结"
+title: "[总结]mysql总结"
 date: 2016-07-25 21:15:06 
 description: "mysql总结"
 categories: 
-    - db
+    - 总结
 tags:
-    - db
+    - mysql
 ---
 
 mysql总结

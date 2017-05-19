@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "jmm总结"
+title: "[总结]jmm总结"
 date: 2016-07-25 21:15:06 
 description: "jmm总结"
 categories: 
-    - 虚拟机
+    - 总结
 tags:
     - jmm
 ---
