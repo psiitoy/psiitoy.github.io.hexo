@@ -42,7 +42,9 @@ BusySpinWaitStrategy
 ---------------------------------------------
 
 给一个最简单的disruptor，single consumer single producer的实现，
-不需要同步锁：共享的变量：int volatile readBarrier;Data[] ring = new Data[A_BIG_NUMBER];
+不需要同步锁：共享的变量：
+int volatile readBarrier;
+Data[] ring = new Data[A_BIG_NUMBER];
 Producer
  线程:int writeCount;void produce(Data newItem) 
  {  ring[++writeCount % ring.size() ] = newItem;  readBarrier++;}
