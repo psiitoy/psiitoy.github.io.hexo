@@ -133,6 +133,7 @@ bash-4.3#
 ```
 
 8) 查看集群状态
+> `curl http://ip:port/_cat/health?v`，也可以用`health?pretty`
 > 我们看到集群有5个节点加入了，实验成功！
 
 ```bash
