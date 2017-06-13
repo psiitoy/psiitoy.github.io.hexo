@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "[集群搭建]记录使用docker搭建elasticsearch2.4.5集群"
-date: 2017-02-25 21:15:06 
+date: 2017-06-06 20:15:06 
 description: "记录使用docker搭建elasticsearch2.4.5集群"
 categories: 
     - 集群搭建
@@ -17,7 +17,7 @@ tags:
 
 ## 1、环境介绍
 
-  本文运行环境 `ubuntu16.04` + `docker17.05` + 官网上下载的`elasticsearch2.4.5`，另外docker环境为`openjdk:8-jre-alpine`。
+  本文运行环境 `ubuntu16.04` + `docker17.05` + 官网上下载的`elasticsearch2.4.5`，另外docker环境为`openjdk:8-jre-alpine`。（使用alpine的原因就是没有太多不必要的组件和命令，docker内部也不需要太多组件）
 
 > ubuntu
 
