@@ -36,6 +36,7 @@ Docker version 17.05.0-ce, build 89658be
 ```
 
 > elasticsearch
+
 ```bash
 $ ./elasticsearch -version
 Version: 2.4.5, Build: c849dd1/2017-04-24T16:18:17Z, JVM: 1.8.0_101
