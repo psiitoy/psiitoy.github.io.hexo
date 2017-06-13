@@ -65,7 +65,7 @@ $ plugin install mobz/elasticsearch-head
 ```
 
 3) 生成es的docker镜像
-> 名称为`psiitoy/elasticsearch:2.4.5`。
+> 镜像名称为`psiitoy/elasticsearch:2.4.5`。
 
 ```bash
 $ docker build -t psiitoy/elasticsearch:2.4.5 .
@@ -97,7 +97,8 @@ $ ip addr show docker0
 ```
 
 6) 修改`elasticsearch.yml`配置。
-> 避免docker容器es服务之间无法互相发现导致的脑裂。参照[Elasticsearch部分节点不能发现集群(脑裂)问题处理](http://blog.csdn.net/huwei2003/article/details/47004745)
+> 避免docker容器es服务之间无法互相发现导致的脑裂。
+> 参照[Elasticsearch部分节点不能发现集群(脑裂)问题处理](http://blog.csdn.net/huwei2003/article/details/47004745)
 
 ```bash
 network.host: 0.0.0.0
@@ -144,7 +145,9 @@ epoch      timestamp cluster       status node.total node.data shards pri relo i
 ```
 
 9) 测试一下用客户端创建索引
-> 创建一个 `number_of_shards`为8,`number_of_replicas`为1 的名叫twitter的index。[testClient的git地址](https://github.com/sprintDragon/experiment/tree/master/experiment-elasticsearch)
+> 创建一个 `number_of_shards`为8,`number_of_replicas`为1 的名叫twitter的index。
+> [testClient的git地址](https://github.com/sprintDragon/experiment/tree/master/experiment-elasticsearch)
+
 ![图 es-dockerfile](/img/blog/esdocker/es-test-client.png)
 
 > 查看head集群信息
