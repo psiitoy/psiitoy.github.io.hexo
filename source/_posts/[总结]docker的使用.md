@@ -2,7 +2,6 @@
 layout: post
 title: "[总结]docker的使用"
 date: 2016-07-25 21:15:06 
-description: "docker的使用"
 categories: 
     - 总结
 tags:

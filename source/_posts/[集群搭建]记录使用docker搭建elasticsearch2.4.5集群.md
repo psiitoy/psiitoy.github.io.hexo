@@ -2,7 +2,6 @@
 layout: post
 title: "[集群搭建]记录使用docker搭建elasticsearch2.4.5集群"
 date: 2017-06-06 20:15:06 
-description: "记录使用docker搭建elasticsearch2.4.5集群"
 categories: 
     - 集群搭建
 tags:

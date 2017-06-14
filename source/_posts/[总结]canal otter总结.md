@@ -2,7 +2,6 @@
 layout: post
 title: "[总结]canal otter总结"
 date: 2017-02-15 09:36:06 
-description: "otter总结"
 categories: 
     - 总结
 tags:

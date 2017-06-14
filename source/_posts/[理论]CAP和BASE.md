@@ -2,7 +2,6 @@
 layout: post
 title: "[理论]CAP和BASE"
 date: 2016-07-25 21:15:06 
-description: "CAP和BASE理论"
 categories: 
     - 理论
 tags:

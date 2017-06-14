@@ -2,7 +2,6 @@
 layout: post
 title: "[总结]mongo迁移mysql总结"
 date: 2016-07-25 21:15:06 
-description: "多线程总结"
 categories: 
     - 总结
 tags:

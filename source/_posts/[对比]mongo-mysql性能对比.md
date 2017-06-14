@@ -2,7 +2,6 @@
 layout: post
 title: "[对比]mongo-mysql性能对比"
 date: 2016-07-25 21:15:06 
-description: "mongo-mysql性能对比"
 categories: 
     - 对比
 tags:

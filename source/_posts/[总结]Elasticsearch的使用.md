@@ -2,7 +2,6 @@
 layout: post
 title: "[总结]Elasticsearch的使用"
 date: 2016-07-25 21:15:06 
-description: "Elasticsearch使用总结"
 categories: 
     - 总结
 tags:

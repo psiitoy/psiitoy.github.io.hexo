@@ -2,7 +2,6 @@
 layout: post
 title: "[总结]如何提高Elasticsearch性能"
 date: 2016-04-27 21:15:06 
-description: "如何提高Elasticsearch性能"
 categories: 
     - 总结
 tags:
