@@ -17,38 +17,38 @@ tags:
 
 技术选型为github+hexo+idea，首先最简单的阐述下这个东西都干嘛的
 
-## 一、技术选型
+## 1、 技术选型
 
-### 1)github
+### 1.1 github
 *   免费空间挂载网站。(这个好理解，提供username.github.io直接可以访问)
 *   发布网站。(将hexo生成的网站推送到username.github.io上)
 *   版本控制。(将整个网站的源文件推送到另一个repo上，便于网站开发环境迁移，多机工作等)
 
 
-### 2)hexo
+### 1.2 hexo
 *   生成博客框架页面，可以通过md解析文章渲染页面，然后发布到github上，多种风格支持，扩展插件丰富。
 *   顺便对比下`hexo`和`jekyll`
     *   hexo 基于`nodejs`，实施起来简便。
     *   jekyll 基于`ruby`，实施起来折腾。 但是支持在线编辑
       
               
-### 3)idea
+### 1.3 idea
 *   工作环境，写作环境。(git插件支持强大，md支持预览)
  
  
-## 二、具体部署方案
+## 2、 具体部署方案
     
-### 1)当然是先申请github,在此不再赘述。需要注意的是要申请两个
+### 2.1 当然是先申请github,在此不再赘述。需要注意的是要申请两个
 *   username.github.io只需要申请下来存放页面，发布只需要配置好_config.yml文件的deploy属性，通过`hexo d`发布
 *   username.github.io.hexo 整个hexo完整项目,方便迁移，多机协作。 
         
-### 2)在项目中安装hexo，并按照其规则把主题样式放在themes里面(我们选择的是next)，并配置好_config.yml
+### 2.2 在项目中安装hexo，并按照其规则把主题样式放在themes里面(我们选择的是next)，并配置好_config.yml
 
-### 3)扩展网站功能，安装扩展插件比如评论、百度统计。
+### 2.3 扩展网站功能，安装扩展插件比如评论、百度统计。
 
-### 4)编写md文件，可以写博文啦。
+### 2.4 编写md文件，可以写博文啦。
 
-## 三、废话少说上代码，注意以下针对已经构建好的项目，再次迁移。
+## 3、 废话少说上代码，注意以下针对已经构建好的项目，再次迁移。
 
 >   克隆项目
 
@@ -140,9 +140,9 @@ $ git pull origin master
 >   ok了(idea暂时只能commit不能push待解决)，一切git操作交给命令行
 
 
-## 四、hexo备注 
+## 4、hexo备注 
 
-一些常用命令：
+### 4.1 一些常用命令：
 
 	hexo new "postName" #新建文章
 	hexo new page "pageName" #新建页面
@@ -152,9 +152,9 @@ $ git pull origin master
 	hexo help  # 查看帮助
 	hexo version  #查看Hexo的版本
 
-### 问题解决
+### 4.2 问题解决
 
-#### github.io js 404无法正常显示
+#### 4.2.1 github.io js 404无法正常显示
 - 最近github page更新了，GitHub Pages 过滤掉了 source/vendors 目录的访问，所以next主题下的source下的vendors目录不能够被访问到，所以就出现了本地hexo s能够正常访问，但是deploy到github就是一片空白，按f12，可以看到大量来自source/vendors的css和js提示404
 
 > 方法一（来自github next主题issue）:
@@ -163,11 +163,11 @@ $ git pull origin master
 > 方法二:更新next主题，不过听过最新的next主题对第三方例如多说删除了，具体不清楚，不敢亲易尝试，毕竟更新一次主题引来的问题太多，很多配置可能都要改，代价太高，所以推荐第一种方法
 
 	
-## 五、Markdown语法参考链接
+## 5、Markdown语法参考链接
 [很实用的例子](https://www.zybuluo.com/mdeditor)
 
 
-## 六、Hexo参考链接
+## 6、Hexo参考链接
 [通过Hexo在GitHub搭站全记录](https://anonymalias.github.io/2016/01/14/hexo-construct-homepage/)
 [HEXO搭建个人博客](http://baixin.io/2015/08/HEXO%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/)
 [搭建 Hexo 博客--增强篇](http://www.jianshu.com/p/2640561e96f8)
