@@ -8,12 +8,14 @@ categories:
 tags:
     - docker
     - elasticsearch
-    - 运维
+    - 集群
 ---
 
-记录使用docker搭建elasticsearch2.4.5集群
+本文记录使用docker搭建elasticsearch2.4.5集群的整个过程，后续作者将继续深入研究es，下一步准备基于此集群对源生elasticsearch(以下简称es)做改造测试。
 
 <!--more-->
+
+[toc]
 
 ## 1、 环境介绍
 
@@ -53,10 +55,10 @@ Version: 2.4.5, Build: c849dd1/2017-04-24T16:18:17Z, JVM: 1.8.0_101
 
 ## 3、 部署过程
 
-### 3.1 制作生成elasticsearch(以下简称es)的`dockerfile`.
-> [dockerfile的git地址](https://github.com/psiitoy/psiitoy.dockerfile.git)，如下图。
+### 3.1 制作生成es的`dockerfile`.
+> 参照***[dockerfile的git地址](https://github.com/psiitoy/psiitoy.dockerfile.git)***，如下图。
 
-![图 es-dockerfile](/img/blog/esdocker/es-dockerfile.png)
+![图 es-dockerfile](https://psiitoy.github.io/img/blog/esdocker/es-dockerfile.png)
 
 ### 3.2 在es源文件中为es安装`head`插件。
 
@@ -99,7 +101,7 @@ $ ip addr show docker0
 
 ### 3.6 修改`elasticsearch.yml`配置。
 > 避免docker容器es服务之间无法互相发现导致的脑裂。
-> 参照[Elasticsearch部分节点不能发现集群(脑裂)问题处理](http://blog.csdn.net/huwei2003/article/details/47004745)
+> 参照***[Elasticsearch部分节点不能发现集群(脑裂)问题处理](http://blog.csdn.net/huwei2003/article/details/47004745)***
 
 ```bash
 network.host: 0.0.0.0
@@ -147,7 +149,7 @@ epoch      timestamp cluster       status node.total node.data shards pri relo i
 
 ### 3.10 测试一下用客户端创建索引
 > 创建一个 `number_of_shards`为8,`number_of_replicas`为1 的名叫twitter的index。
-> [testClient的git地址](https://github.com/sprintDragon/experiment/tree/master/experiment-elasticsearch)
+> 参照***[testClient的git地址](https://github.com/sprintDragon/experiment/tree/master/experiment-elasticsearch)***
 
 ```java
 public class ClientTest {
@@ -294,7 +296,7 @@ public class ClientTest {
 ```
 
 ### 3.11 查看head集群信息，成功了。
-![图 es-dockerfile](/img/blog/esdocker/es-head-cluster.png)
+![图 es-head-cluster](https://psiitoy.github.io/img/blog/esdocker/es-head-cluster.png)
 
 
 ### 3.12 停止并删除所有docker容器

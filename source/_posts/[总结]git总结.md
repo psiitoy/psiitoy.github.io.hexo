@@ -9,9 +9,11 @@ tags:
     - git
 ---
 
-文章简要记录部分常用git命令。本文感谢[廖雪峰](http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)提供的详细git教程。
+文章简要记录部分常用git命令。本文感谢 ***[廖雪峰](http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)*** 提供的详细git教程。
 
 <!--more-->
+
+[toc]
 
 ## 1、 自报家门
 
@@ -400,5 +402,5 @@ $ git br -r --merged | egrep -v "origin/master|origin/HEAD" | sed 's/origin\//:/
 ```
 
 ## 18、 git学习参考链接
-[廖雪峰Git教程](http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)
-[git简易指南](http://www.bootcss.com/p/git-guide/)
+***[廖雪峰Git教程](http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)***
+***[git简易指南](http://www.bootcss.com/p/git-guide/)***

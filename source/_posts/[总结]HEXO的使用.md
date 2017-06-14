@@ -15,6 +15,8 @@ tags:
 
 <!--more-->
 
+[toc]
+
 技术选型为github+hexo+idea，首先最简单的阐述下这个东西都干嘛的
 
 ## 1、 技术选型
@@ -164,13 +166,13 @@ $ git pull origin master
 
 	
 ## 5、Markdown语法参考链接
-[很实用的例子](https://www.zybuluo.com/mdeditor)
+***[很实用的例子](https://www.zybuluo.com/mdeditor)***
 
 
 ## 6、Hexo参考链接
-[通过Hexo在GitHub搭站全记录](https://anonymalias.github.io/2016/01/14/hexo-construct-homepage/)
-[HEXO搭建个人博客](http://baixin.io/2015/08/HEXO%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/)
-[搭建 Hexo 博客--增强篇](http://www.jianshu.com/p/2640561e96f8)
-[next主题的配置和优化](http://blog.csdn.net/willxue123/article/details/50994852)
-[HEXO增加标签页、分类页](https://github.com/iissnan/hexo-theme-next/wiki/)
-[HEXO next主题增加畅言评论系统](http://www.zhaiqianfeng.com/2017/03/changyan-for-hexo-next-theme.html)
+***[通过Hexo在GitHub搭站全记录](https://anonymalias.github.io/2016/01/14/hexo-construct-homepage/)***
+***[HEXO搭建个人博客](http://baixin.io/2015/08/HEXO%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/)***
+***[搭建 Hexo 博客--增强篇](http://www.jianshu.com/p/2640561e96f8)***
+***[next主题的配置和优化](http://blog.csdn.net/willxue123/article/details/50994852)***
+***[HEXO增加标签页、分类页](https://github.com/iissnan/hexo-theme-next/wiki/)***
+***[HEXO next主题增加畅言评论系统](http://www.zhaiqianfeng.com/2017/03/changyan-for-hexo-next-theme.html)***
