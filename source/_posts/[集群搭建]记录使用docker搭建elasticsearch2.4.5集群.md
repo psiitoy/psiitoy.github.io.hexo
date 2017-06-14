@@ -149,13 +149,155 @@ epoch      timestamp cluster       status node.total node.data shards pri relo i
 > 创建一个 `number_of_shards`为8,`number_of_replicas`为1 的名叫twitter的index。
 > [testClient的git地址](https://github.com/sprintDragon/experiment/tree/master/experiment-elasticsearch)
 
-![图 es-dockerfile](/img/blog/esdocker/es-test-client.png)
+```java
+public class ClientTest {
+    private static Client client = null;//client一定要是单例，单例，单例！不要在应用中构造多个客户端！
 
-> 查看head集群信息
+    public static void main(String[] args) {
+        try {
+            client = getClient("elasticsearch", "172.17.0.3", 9300);//client一定要是单例，单例，单例！不要在应用中构造多个客户端！
+            createIndex("twitter", "tweet");
+            System.out.println("#" + client);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (client != null) {
+                client.close();
+            }
+        }
+    }
+
+    /**
+     * 创建es client 一定要是单例，单例，单例！不要在应用中构造多个客户端！
+     * clusterName:集群名字
+     * nodeIp:集群中节点的ip地址
+     * nodePort:节点的端口
+     *
+     * @return
+     * @throws UnknownHostException
+     */
+    public static synchronized Client getClient(String clusterName, String nodeIp, int nodePort) throws UnknownHostException {
+        //设置集群的名字
+        Settings settings = Settings.settingsBuilder()
+                .put("cluster.name", clusterName)
+                .put("client.transport.sniff", false)
+//                .put("number_of_shards", 1)
+//                .put("number_of_replicas", 0)
+                .build();
+
+        //创建集群client并添加集群节点地址
+        Client client = TransportClient.builder().settings(settings).build()
+//                .addTransportAddress(new InetSocketTransportAddress("192.168.200.195", 9370))
+//                .addTransportAddress(new InetSocketTransportAddress("192.168.200.196", 9370))
+//                .addTransportAddress(new InetSocketTransportAddress("192.168.200.197", 9370))
+//                .addTransportAddress(new InetSocketTransportAddress("192.168.200.198", 9370))
+                .addTransportAddress(
+                        new InetSocketTransportAddress(InetAddress.getByName(nodeIp),
+                                nodePort));
+
+        return client;
+    }
+
+    /**
+     * 创建索引
+     * 注意：在生产环节中通知es集群的owner去创建index
+     * @param indexName
+     * @param documentType
+     * @throws IOException
+     */
+    private static void createIndex(String indexName, String documentType) throws IOException {
+        final IndicesExistsResponse iRes = client.admin().indices().prepareExists(indexName).execute().actionGet();
+        if (iRes.isExists()) {
+            client.admin().indices().prepareDelete(indexName).execute().actionGet();
+        }
+        client.admin().indices().prepareCreate(indexName).setSettings(Settings.settingsBuilder().put("number_of_shards", 8).put("number_of_replicas", 1)).execute().actionGet();
+        XContentBuilder mapping = jsonBuilder()
+                .startObject()
+                .startObject(documentType)
+//                     .startObject("_routing").field("path","tid").field("required", "true").endObject()
+                .startObject("_source").field("enabled", "true").endObject()
+                .startObject("_all").field("enabled", "false").endObject()
+                .startObject("properties")
+                .startObject("user")
+                .field("store", true)
+                .field("type", "string")
+                .field("index", "not_analyzed")
+                .endObject()
+                .startObject("message")
+                .field("store", true)
+                .field("type","string")
+                .field("index", "analyzed")
+                .field("analyzer", "standard")
+                .endObject()
+                .startObject("price")
+                .field("store", true)
+                .field("type", "float")
+                .endObject()
+                .startObject("nv1")
+                .field("store", true)
+                .field("type", "integer")
+                .field("index", "no")
+                .field("null_value", 0)
+                .endObject()
+                .startObject("nv2")
+                .field("store", true)
+                .field("type", "integer")
+                .field("index", "not_analyzed")
+                .field("null_value", 10)
+                .endObject()
+                .startObject("tid")
+                .field("store", true)
+                .field("type", "string")
+                .field("index", "not_analyzed")
+                .endObject()
+//                               .startObject("location")
+//                                    .field("store", true)
+//                                  .field("type", "geo_point")
+//                                  .field("lat_lon", true)
+//                                  .field("geohash", true)
+//                                  .field("geohash_prefix", true)
+//                                  .field("geohash_precision", 7)
+//                               .endObject()
+//                               .startObject("shape")
+//                                    .field("store", true)
+//                                  .field("type", "geo_shape")
+//                                  .field("geohash", true)
+//                                  .field("geohash_prefix", false)
+//                                  .field("geohash_precision", 7)
+//                               .endObject()
+                .startObject("endTime")
+                .field("type", "date")
+                .field("store", true)
+                .field("index", "not_analyzed")
+                //2015-08-21T08:35:13.890Z
+                .field("format", "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .endObject()
+                .startObject("date")
+                .field("type", "date")
+//                                  .field("store", true)
+//                                  .field("index", "not_analyzed")
+                //2015-08-21T08:35:13.890Z
+//                                  .field("format", "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .endObject()
+                .endObject()
+                .endObject()
+                .endObject();
+        client.admin().indices()
+                .preparePutMapping(indexName)
+                .setType(documentType)
+                .setSource(mapping)
+                .execute().actionGet();
+    }
+
+
+}
+```
+
+### 3.11 查看head集群信息，成功了。
 ![图 es-dockerfile](/img/blog/esdocker/es-head-cluster.png)
 
 
-### 3.11 停止并删除所有docker容器
+### 3.12 停止并删除所有docker容器
 > 加`-f`参数强制停止删除
 
 ```bash
