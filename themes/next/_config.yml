@@ -149,7 +149,7 @@ avatar: https://avatars2.githubusercontent.com/u/20333098?v=3&u=f86b14c3b141f38f
 
 # Table Of Contents in the Sidebar
 toc:
-  enable: false
+  enable: true
 
   # Automatically add list number to toc.
   number: false
