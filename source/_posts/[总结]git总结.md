@@ -12,9 +12,9 @@ tags:
 
 <!--more-->
 
-[toc]
+---------------
 
-## 1、 自报家门
+### 1、 自报家门
 
 > 注意`git config`命令的`--global`参数，是机器维度上的全局配置，可以对某个仓库指定不同的用户名和email地址。
 
@@ -59,13 +59,17 @@ $ git config --global core.safecrlf true
 $ git config --global push.default simple
 ```
 
-## 2、 查看版本信息
+---------------
+
+### 2、 查看版本信息
 
 ```bash
 $ git status
 ```
 
-## 3、 查看提交日志
+---------------
+
+### 3、 查看提交日志
 
 > 加上`--pretty=oneline`使每个提交显示在一行
 > 查看提交历史来决定要回退到那个版本
@@ -74,7 +78,9 @@ $ git status
 $ git log --pretty=oneline
 ```
 
-## 4、 查看操作日志
+---------------
+
+### 4、 查看操作日志
 
 > 用来查看每一次命令的记录
 > 可以回滚之后再恢复,“回到未来”
@@ -83,7 +89,9 @@ $ git log --pretty=oneline
 $ git reflog
 ```
 
-## 5、 回滚版本
+---------------
+
+### 5、 回滚版本
 
 > 回退到上一个`commit`的版本
 
@@ -102,7 +110,9 @@ $ git reset --hard commit_id
 $ git push -f origin master 
 ```
 
-## 6、 撤销更改
+---------------
+
+### 6、 撤销更改
 
 > 撤销单个文件的更改，使改文件返回add之前的状态 
 
@@ -110,7 +120,9 @@ $ git push -f origin master
 $ git checkout -- file
 ```
 
-## 7、 关联远程仓库
+---------------
+
+### 7、 关联远程仓库
 
 > 添加后，远程库的名字就是`origin`，这是git默认的叫法，可以改成别的。但是这一看就是远程库。
 > 同时，放心你们推不上去，因为你的`ssh key`不在我的账户列表中
@@ -119,7 +131,9 @@ $ git checkout -- file
 $ git remote add origin git@github.com:psiitoy/art.git
 ```
 
-## 8、 把本地库的所有内容推送到远程库上
+---------------
+
+### 8、 把本地库的所有内容推送到远程库上
 
 > 由于远程库是空的，我们第一次推送`master`分支时，加上了`-u`参数，Git不但会把本地的`master`分支内容推送的远程新的`master`分支，还会把本地的`master`分支和远程的`master`分支关联起来，在以后的推送或者拉取时就可以简化命令。
 > `-u`是关联的意思
@@ -134,7 +148,9 @@ $ git push -u origin master
 $ git push origin master
 ```
 
-## 9、 创建分支
+---------------
+
+### 9、 创建分支
 
 > 创建`<name>`分支，然后切换到`<name>`分支
 
@@ -179,7 +195,9 @@ $ git merge <name>
 $ git branch -d <name>
 ```
 
-## 10、 合并分支
+---------------
+
+### 10、 合并分支
 
 > 合并流程，先`merge`，再解决冲突，然后`add`,`commit`
 
@@ -199,7 +217,9 @@ $ git merge --no--ff -m 'merge with no-ff' <fromBranch>
 $ git log --graph
 ```
 
-## 11、 暂存分支
+---------------
+
+### 11、 暂存分支
 
 > 暂存
 
@@ -231,7 +251,9 @@ $ git stash list
 $ git stash apply stash@{0}
 ```
 
-## 12、 多人协作
+---------------
+
+### 12、 多人协作
 
 > 查看远程库信息
 
@@ -291,7 +313,9 @@ $ git fetch -p
   
 >> 5. 如果git pull提示“no tracking information”，则说明本地分支和远程分支的链接关系没有创建，用命令git branch --set-upstream branch-name origin/branch-name。
   
-## 13、 创建标签
+---------------
+  
+### 13、 创建标签
 
 > tag就是一个让人容易记住的有意义的名字，它跟某个`commit`绑在一起。打最新提交的commit或者指定`commit_id`，还可以加`-m`指定说明文字。
 
@@ -354,7 +378,9 @@ To git@github.com:michaelliao/learngit.git
  - [deleted]         v0.9
 ```
 
-## 14、 配置别名
+---------------
+
+### 14、 配置别名
 
 > 我们只需要敲一行命令，告诉Git，以后`st`就表示`status`
 
@@ -372,8 +398,10 @@ $ git config --global alias.br branch
 git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 ```
 
-## 15、 不小心提交错了不想纳入版本管理的文件(`gitignore`不起作用)
+---------------
 
+### 15、 不小心提交错了不想纳入版本管理的文件
+> `gitignore`不起作用
 > 明明写好了规则,但问题不起作用,每次还是重复提交,无法忍受.其实这个文件里的规则对已经追踪的文件是没有效果的.所以我们需要使用rm命令清除一下相关的缓存内容.这样文件将以未追踪的形式出现.然后再重新添加提交一下,.gitignore文件里的规则就可以起作用了。
 
 ```bash
@@ -383,7 +411,9 @@ $ git commit -m 'update .gitignore'
 
 ```
 
-## 16、 运用shh -T -v git@github.com查看具体出错信息，再根据信息来调试
+---------------
+
+### 16、 运用shh -T -v git@github.com查看具体出错信息，再根据信息来调试
 
 ```bash
 $ ssh -T psiitoy@git.com
@@ -394,12 +424,18 @@ $ ssh -vT psiitoy@git.com
 
 ```
 
-## 17、 清理远端，已经合并过的分支
+---------------
+
+### 17、 清理远端，已经合并过的分支
 
 ```bash
 $ git br -r --merged | egrep -v "origin/master|origin/HEAD" | sed 's/origin\//:/g' | xargs git push origin
 ```
 
-## 18、 git学习参考链接
+---------------
+
+### 18、 git学习参考链接
 ***[廖雪峰Git教程](http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)***
 ***[git简易指南](http://www.bootcss.com/p/git-guide/)***
+
+---------------

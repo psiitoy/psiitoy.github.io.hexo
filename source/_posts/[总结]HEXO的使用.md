@@ -14,7 +14,7 @@ tags:
 
 <!--more-->
 
-[toc]
+---------------
 
 技术选型为github+hexo+idea，首先最简单的阐述下这个东西都干嘛的
 
@@ -35,21 +35,27 @@ tags:
               
 ### 1.3 idea
 *   工作环境，写作环境。(git插件支持强大，md支持预览)
- 
- 
+
+---------------
+
 ## 2、 具体部署方案
     
-### 2.1 当然是先申请github,在此不再赘述。需要注意的是要申请两个
+### 2.1 当然是先申请github
+> 在此不再赘述。需要注意的是要申请两个
 *   username.github.io只需要申请下来存放页面，发布只需要配置好_config.yml文件的deploy属性，通过`hexo d`发布
 *   username.github.io.hexo 整个hexo完整项目,方便迁移，多机协作。 
         
-### 2.2 在项目中安装hexo，并按照其规则把主题样式放在themes里面(我们选择的是next)，并配置好_config.yml
+### 2.2 在项目中安装hexo
+> 并按照其规则把主题样式放在themes里面(我们选择的是next)，并配置好_config.yml
 
-### 2.3 扩展网站功能，安装扩展插件比如评论、百度统计。
+### 2.3 扩展网站功能
+> 安装扩展插件比如评论、百度统计。
 
-### 2.4 编写md文件，可以写博文啦。
+### 2.4 编写md文件
+> 可以写博文啦。
 
-## 3、 废话少说上代码，注意以下针对已经构建好的项目，再次迁移。
+## 3、 废话少说上代码
+> 注意以下针对已经构建好的项目，再次迁移。
 
 >   克隆项目
 
@@ -140,6 +146,7 @@ $ git pull origin master
 
 >   ok了(idea暂时只能commit不能push待解决)，一切git操作交给命令行
 
+---------------
 
 ## 4、hexo备注 
 
@@ -163,10 +170,12 @@ $ git pull origin master
 
 > 方法二:更新next主题，不过听过最新的next主题对第三方例如多说删除了，具体不清楚，不敢亲易尝试，毕竟更新一次主题引来的问题太多，很多配置可能都要改，代价太高，所以推荐第一种方法
 
+---------------
 	
 ## 5、Markdown语法参考链接
 ***[很实用的例子](https://www.zybuluo.com/mdeditor)***
 
+---------------
 
 ## 6、Hexo参考链接
 ***[通过Hexo在GitHub搭站全记录](https://anonymalias.github.io/2016/01/14/hexo-construct-homepage/)***
@@ -175,3 +184,5 @@ $ git pull origin master
 ***[next主题的配置和优化](http://blog.csdn.net/willxue123/article/details/50994852)***
 ***[HEXO增加标签页、分类页](https://github.com/iissnan/hexo-theme-next/wiki/)***
 ***[HEXO next主题增加畅言评论系统](http://www.zhaiqianfeng.com/2017/03/changyan-for-hexo-next-theme.html)***
+
+---------------
