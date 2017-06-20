@@ -10,7 +10,7 @@ tags:
     - 集群
 ---
 
-本文记录使用docker搭建elasticsearch2.4.5集群的整个过程，后续作者将继续深入研究es，下一步准备基于此集群对源生elasticsearch(以下简称es)做改造测试。
+本文记录使用docker搭建elasticsearch2.4.5集群的整个过程，过程亲测同样适用于elasticsearch2.1.2，后续作者将继续深入研究es，下一步准备基于此集群对源生elasticsearch(以下简称es)做改造测试。
 
 <!--more-->
 
@@ -19,6 +19,7 @@ tags:
 ## 1、 环境介绍
 
 > 本文运行环境 `ubuntu16.04` + `docker17.05` + 官网上下载的`elasticsearch2.4.5`，另外docker环境为`openjdk:8-jre-alpine`。（使用alpine的原因就是没有太多不必要的组件和命令，docker内部也不需要太多组件）
+> ***[es源码下载地址](https://www.elastic.co/downloads/past-releases)***
 
 ### 1.1 ubuntu
 
