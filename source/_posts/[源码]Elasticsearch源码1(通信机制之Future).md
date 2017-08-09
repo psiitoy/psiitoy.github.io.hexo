@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[源码]Elasticsearch源码(1通信机制之Future)"
+title: "[源码]Elasticsearch源码1(通信机制之Future)"
 date: 2017-08-09 20:15:06 
 categories: 
     - 源码
@@ -8,6 +8,7 @@ tags:
     - es
 ---
 
+本文讨论了ES中的Future模式
 
 <!--more-->
 
