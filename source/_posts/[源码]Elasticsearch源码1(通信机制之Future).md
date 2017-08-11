@@ -8,6 +8,7 @@ tags:
     - es
 ---
 
+整个源码阅读基于ElasticSearch5.4.3，学习过程中保持对文章的持续更新。
 本文讨论了ES中的Future模式
 
 <!--more-->
@@ -201,8 +202,15 @@ jdk的异步非阻塞的[CompletableFuture](http://blog.csdn.net/zero__007/artic
 
 * 回到正题，我们继续看源码，Client向网关节点A发起异步请求，拿到ActionFuture(继承自Future)。代码如下
 
-```java
-class AbstractClient {
+* AbstractClient实现了Client 对应的所有对外提供的action的api，比如 index,get,search等  
+
+``` java
+interface Client{
+    ActionFuture<IndexResponse> index(IndexRequest request);
+    ActionFuture<GetResponse> get(GetRequest request);
+}
+
+public abstract class AbstractClient extends AbstractComponent implements Client {
     @Override
     public final <Request extends ActionRequest, Response extends ActionResponse, RequestBuilder extends ActionRequestBuilder<Request, Response, RequestBuilder>> ActionFuture<Response> execute(Action<Request, Response, RequestBuilder> action, Request request) {
         PlainActionFuture<Response> actionFuture = PlainActionFuture.newFuture();// 初始化future
@@ -211,26 +219,28 @@ class AbstractClient {
     }
 }
 
+```
+
+* TransportActionNodeProxy专门负责代理请求对应的action(比如get search bulk等)
+
+```java
 public class TransportActionNodeProxy<Request extends ActionRequest, Response extends ActionResponse> extends AbstractComponent {
+    
     public void execute(final DiscoveryNode node, final Request request, final ActionListener<Response> listener) {
         /**
          * 请求校验(匿名内部类)
          * @see GetRequest#validate(),SearchRequest#validate()
          *
-         */
+         */        
         ActionRequestValidationException validationException = request.validate();
         if (validationException != null) {
             listener.onFailure(validationException);
             return;
         }
         // 通过netty的channel将数据写入
-        transportService.sendRequest(node, action.name(), request, transportOptions, new ActionListenerResponseHandler<Response>(listener) {//code3
-            @Override
-            public Response newInstance() {
-                return action.newResponse();
-            }
-        });
-    }
+        transportService.sendRequest(node, action.name(), request, transportOptions,
+            new ActionListenerResponseHandler<>(listener, action::newResponse));
+    }    
 }    
     
 ```
@@ -245,6 +255,10 @@ public class TransportActionNodeProxy<Request extends ActionRequest, Response ex
 TransportResponseHandler，与code1的request是一一对应的。
 
 * ActionListener就是声明的回调接口，onResponse最终会执行set(v)，而onFailure会执行setException(e),把code2赋值。
+
+* code1a  es5.x比2.x增加了Supplier，ActionListenerResponseHandler的回调声明不用实现newInstance了，
+取而代之的是声明式的Supplier(获取只需要掉无参get())，由上方的GenericAction子类(专门声明action消息的)去new。
+5.x大量使用了jdk8的特性。
 
 ```java
 public class TransportService extends AbstractLifecycleComponent<TransportService> {
@@ -264,12 +278,18 @@ public interface ActionListener<Response> {
     void onFailure(Throwable e);
 }
 
-public abstract class ActionListenerResponseHandler<Response extends TransportResponse> extends BaseTransportResponseHandler<Response> {
+/**
+ * A simple base class for action response listeners, defaulting to using the SAME executor (as its
+ * very common on response handlers).
+ */
+public class ActionListenerResponseHandler<Response extends TransportResponse> implements TransportResponseHandler<Response> {
 
     private final ActionListener<Response> listener;
+    private final Supplier<Response> responseSupplier;  //code1a es5.x比2.x增加了Supplier，回调声明不用实现newInstance了
 
-    public ActionListenerResponseHandler(ActionListener<Response> listener) {
-        this.listener = listener;
+    public ActionListenerResponseHandler(ActionListener<Response> listener, Supplier<Response> responseSupplier) {
+        this.listener = Objects.requireNonNull(listener);
+        this.responseSupplier = Objects.requireNonNull(responseSupplier);
     }
 
     @Override
@@ -283,14 +303,16 @@ public abstract class ActionListenerResponseHandler<Response extends TransportRe
     }
 
     @Override
+    public Response newInstance() {
+        return responseSupplier.get();
+    }
+
+    @Override
     public String executor() {
         return ThreadPool.Names.SAME;
     }
 }
 
-public abstract class BaseTransportResponseHandler<T extends TransportResponse> implements TransportResponseHandler<T> {
-
-}
 
 //code1中PlainActionFuture的父类AdapterActionFuture(适配器)，我们只看两个方法
 public abstract class AdapterActionFuture<T, L> extends BaseFuture<T> implements ActionFuture<T>, ActionListener<L> {

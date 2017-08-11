@@ -8,8 +8,8 @@ tags:
     - es
 ---
 
-[源码]Elasticsearch源码2(通信机制之RPC)
-
+整个源码阅读基于ElasticSearch5.4.3，学习过程中保持对文章的持续更新。
+本文讨论了ES中的远程调用
 
 <!--more-->
 
@@ -152,9 +152,15 @@ public class TransportService extends AbstractLifecycleComponent {
 * TcpTransport是Netty4Transport和Netty3Transport的父类，利用范型抽象出了Channel所有涉及Channel的均由
 子类去实现，其负责封装所有发送请求的逻辑。
 
-* NodeChannels存入transport容器中，可执行发送逻辑。
+* NodeChannels存入transport容器中(TcpTransport)，可执行发送逻辑。
+
+* TcpTransportChannel可执行响应逻辑。
+
+* 发送会根据场景选择channel，响应就是发给对应的channel。最终执行消息传输的都是Transport(TcpTransport)。
 
 * 真正的发送逻辑是sendRequestToChannel()，最终执行code12发送消息。
+
+![图 es5-uml1](https://psiitoy.github.io/img/blog/essourcecode/es5-uml1.png)
 
 ```java
 public abstract class TcpTransport<Channel> extends AbstractLifecycleComponent implements Transport {
@@ -256,10 +262,13 @@ public class Netty4Transport extends TcpTransport<Channel> {
 
 接收消息
 * 客户端socket连接上专门监听消息的线程收到消息，分析结果，取到requestID。
+
 * messageReceived是比较常见的解析数据包的过程，es自己通过XContent实现的序列化协议，所以代码可读性稍差，作者
 自己通过mssagepack重写了这部分，详见下文。
+
 * 然叫首先交由TransportService.Adapter 从前面的ConcurrentHashMap里面get(requestID)出callback对象，
 取消超时任务再交由线程池执行回调code13。
+
 * code13执行的过程其实就是执行发送消息时的幂名内部类(也叫回调)，
 通常是交由channel去做异步通知(相当于非本地节点还在监听response)，或者是Aqs释放本地阻塞(本地是调用发起方，见[[源码]Elasticsearch源码1(通信机制之Future)](https://psiitoy.github.io/2017/08/09/[源码]Elasticsearch源码1(通信机制之Future)/))。
 
