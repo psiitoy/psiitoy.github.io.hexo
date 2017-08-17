@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "[源码]Elasticsearch源码2(通信机制之RPC)"
-date: 2017-08-09 20:15:06 
+date: 2017-08-10 20:15:06 
 categories: 
     - 源码
 tags:
@@ -13,25 +13,31 @@ tags:
 
 <!--more-->
 
+## 1、 前言
+
 既然是分布式系统当然离不开通信层，首先es通信部分使用的Netty，Netty又支持了Tcp和Http两种方式做通信。
 集群Node之间的通信，数据的传输，java客户端的请求调用(transport client)使用的均是Tcp，此外同样支持
 Rest等Http方式的请求。
 
-首先上图，举最简单的例子引入话题，一次Get请求调用。
+## 2、 一个最简单的例子
 
-场景1：Client 连接节点A并发送请求，数据在节点B。
+首先上时序图，举最简单的例子引入话题，一次通过es的java Client Api进行Get请求调用(Tcp方式)。
+
+> 场景1：Client 连接节点A并发送请求，数据在节点B。
 
 ![图 es-get1](https://psiitoy.github.io/img/blog/essourcecode/es-get1.png)
     
-场景2：场景1简化版,Client 连接节点A并发送请求，数据就在A直接返回。
+> 场景2：场景1简化版,Client 连接节点A并发送请求，数据就在A直接返回。
 
 ![图 es-get2](https://psiitoy.github.io/img/blog/essourcecode/es-get2.png)
 
-关于RPC，这里有一篇文章写的很好[你应该知道的RPC原理](http://www.cnblogs.com/LBSer/p/4853234.html)
+> 关于RPC，这里有一篇文章写的很好[你应该知道的RPC原理](http://www.cnblogs.com/LBSer/p/4853234.html)
+
+## 3、 ES中的RPC，源码部分
 
 由于是基于Netty，那么我们直接看源码
 
-首先看发送请求
+> 首先看发送请求
 
 * TransportService(Es通信过程中存请求上下文，以及RPC方法映射，即request对应action的地方)，
 的 clientHandlers就是异步回调池(根据requestId拿到回调执行),存放的就是requestId以及对应的
@@ -156,7 +162,8 @@ public class TransportService extends AbstractLifecycleComponent {
 
 * TcpTransportChannel可执行响应逻辑。
 
-* 发送会根据场景选择channel，响应就是发给对应的channel。最终执行消息传输的都是Transport(TcpTransport)。
+* 发送会根据场景选择channel(recovery,bulk,reg,state,ping分别对应不同的channel[]，个数也不同，其创建的过程
+涉及到节点发现的过程，另文细说)，响应就是发给对应的channel。最终执行消息传输的都是Transport(TcpTransport)。
 
 * 真正的发送逻辑是sendRequestToChannel()，最终执行code12发送消息。
 
@@ -257,21 +264,20 @@ public class Netty4Transport extends TcpTransport<Channel> {
 
 ```
 
-发送响应
+#### 发送响应
 * 服务端接收到请求并处理后，将response结果（此结果中包含了前面的requestID）发送给客户端
 
-接收消息
+#### 接收消息
 * 客户端socket连接上专门监听消息的线程收到消息，分析结果，取到requestID。
 
 * messageReceived是比较常见的解析数据包的过程，es自己通过XContent实现的序列化协议，所以代码可读性稍差，作者
-自己通过mssagepack重写了这部分，详见下文。
+自己通过mssagepack重写了这部分，详见别文。
 
 * 然叫首先交由TransportService.Adapter 从前面的ConcurrentHashMap里面get(requestID)出callback对象，
 取消超时任务再交由线程池执行回调code13。
 
 * code13执行的过程其实就是执行发送消息时的幂名内部类(也叫回调)，
 通常是交由channel去做异步通知(相当于非本地节点还在监听response)，或者是Aqs释放本地阻塞(本地是调用发起方，见[[源码]Elasticsearch源码1(通信机制之Future)](https://psiitoy.github.io/2017/08/09/[源码]Elasticsearch源码1(通信机制之Future)/))。
-
 
 ```java
 public abstract class TcpTransport<Channel> extends AbstractLifecycleComponent implements Transport {
