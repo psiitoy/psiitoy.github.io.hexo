@@ -250,7 +250,10 @@ public interface Delayed extends Comparable<Delayed> {
 不能在同步队列上进行 peek，因为仅在试图要取得元素时，该元素才存在。
 可以选择公平模式。
 
-6) [concurrent] LinkedTransferQueue (略)
+6) [concurrent] LinkedTransferQueue (FIFO CAS无锁)
+> LinkedTransferQueue通过CAS(而没有锁整个队列)入队或者增加预订,CAS VS LOCK的区别。
+***`transfer()`***如果队列中有人发现有人在等，则直接给那个人（有一个参数waiter指定了在等的线程）如果没人在等，就放进队列。
+
 
 ------------
 

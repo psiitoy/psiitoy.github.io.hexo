@@ -81,3 +81,6 @@ monitor跟锁的关系
 
 
 所谓软件 STM 的方式，lock free来实现的无锁容器，后面用到的 compare and swap 指令，它也是要加锁的，比如x86的 cmpxchg 来做 CAS前面都要把总线给锁了，只是说冲突时不会切到内核态罢了。
+
+CAS vs 锁
+读多写少应用CAS性能更好，比锁更消耗CPU

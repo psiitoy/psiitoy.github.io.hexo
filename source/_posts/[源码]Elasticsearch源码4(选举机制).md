@@ -12,4 +12,6 @@ Elasticsearch源码4(选举机制)
 
 <!--more-->
 
-```
+http://www.cnblogs.com/zziawanblog/p/6577383.html
+
+http://www.cnblogs.com/zziawanblog/p/6583107.html

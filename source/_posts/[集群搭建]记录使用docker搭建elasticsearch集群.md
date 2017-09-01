@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[集群搭建]记录使用docker搭建elasticsearch2.4.5集群"
+title: "[集群搭建]记录使用docker搭建elasticsearch集群"
 date: 2017-06-06 20:15:06 
 categories: 
     - 集群搭建
@@ -10,7 +10,7 @@ tags:
     - 集群
 ---
 
-本文记录使用docker搭建elasticsearch2.4.5集群的整个过程，过程亲测同样适用于elasticsearch2.1.2，后续作者将继续深入研究es，下一步准备基于此集群对源生elasticsearch(以下简称es)做改造测试。
+本文记录使用docker搭建elasticsearch集群的整个过程(文中使用的2.1.2举例)，过程亲测同样适用于elasticsearch2.x,5.x，后续作者将继续深入研究es，下一步准备基于此集群对源生elasticsearch(以下简称es)做改造测试。
 
 <!--more-->
 
@@ -18,7 +18,7 @@ tags:
 
 ## 1、 环境介绍
 
-> 本文运行环境 `ubuntu16.04` + `docker17.05` + 官网上下载的`elasticsearch2.4.5`，另外docker环境为`openjdk:8-jre-alpine`。（使用alpine的原因就是没有太多不必要的组件和命令，docker内部也不需要太多组件）
+> 本文运行环境 `ubuntu16.04` + `docker17.05` + 官网上下载的`elasticsearch2.1.2`，另外docker环境为`openjdk:8-jre-alpine`。（使用alpine的原因就是没有太多不必要的组件和命令，docker内部也不需要太多组件）
 > ***[es源码下载地址](https://www.elastic.co/downloads/past-releases)***
 
 ### 1.1 ubuntu
@@ -37,11 +37,11 @@ Docker version 17.05.0-ce, build 89658be
 
 ```
 
-### 1.3 elasticsearch
+### 1.3 elasticsearch(版本忽略)
 
 ```bash
 $ ./elasticsearch -version
-Version: 2.4.5, Build: c849dd1/2017-04-24T16:18:17Z, JVM: 1.8.0_101
+Version: 2.1.2, Build: c849dd1/2017-04-24T16:18:17Z, JVM: 1.8.0_101
 
 ```
 
@@ -72,10 +72,10 @@ $ plugin install mobz/elasticsearch-head
 ```
 
 ### 3.3 生成es的docker镜像
-> 镜像名称为`psiitoy/elasticsearch:2.4.5`。
+> 镜像名称为`psiitoy/elasticsearch:2.1.2`。
 
 ```bash
-$ docker build -t psiitoy/elasticsearch:2.4.5 .
+$ docker build -t psiitoy/elasticsearch:2.1.2 .
 
 ```
 
@@ -123,9 +123,9 @@ discovery.zen.ping.unicast.hosts: ["172.17.0.2", "172.17.0.3"]
 > 在使用 `-d` 参数时，容器启动后会进入后台。
 
 ```bash
-$ docker run -d -v ~/IdeaWorkspace/docker/psiitoy.dockerfile/dockerfile-alpine-es/elasticsearch-2.4.5/logs:/usr/share/elasticsearch/logs psiitoy/elasticsearch:2.4.5
+$ docker run -d -v ~/usr/share/elasticsearch/logs:/usr/share/elasticsearch/logs psiitoy/elasticsearch:2.1.2
 66ca0270ef44
-$ docker run -d -v ~/IdeaWorkspace/docker/psiitoy.dockerfile/dockerfile-alpine-es/elasticsearch-2.4.5/logs:/usr/share/elasticsearch/logs psiitoy/elasticsearch:2.4.5
+$ docker run -d -v ~/usr/share/elasticsearch/logs:/usr/share/elasticsearch/logs psiitoy/elasticsearch:2.1.2
 ddfbb7ef65bc
 
 ```
