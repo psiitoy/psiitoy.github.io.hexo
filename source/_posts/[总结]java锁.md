@@ -84,3 +84,28 @@ monitor跟锁的关系
 
 CAS vs 锁
 读多写少应用CAS性能更好，比锁更消耗CPU
+
+ReentrantLock
+
+简述：ReentrantLock锁机制的实现是基于它的一个成员变量sync，
+这个Sync是AbstractQueuedSynchronized(AQS)的一个子类
+（ps：sync类是ReentrantLock自己定义的一个内部类）。
+另外在ReentrantLock内部还定义了另外两个类，分别是FairSync和NonFairSync，
+这两个类就是分别对应的锁公平分配和不公平分配的两个实现，它们都继承自Sync
+（类图已经清晰的描述出来了继承结构）。有关锁的分配和释放逻辑都是封装在了AQS里面的
+（AQS是AbstractQueuedSynchronized的简称，是JSR166规范中提出的一个基础的同步中心类或者说是同步框架，
+其在内部实现了大量的同步操作，而且用户还可以在此类的基础上自定义自己的同步类），
+可见Sync和AQS是锁机制实现的核心类（AQS详述见下文）。
+
+
+ Ps：上文简单的贴了两行代码主要为了说明一点，ReentrantLock和ReentrantReadWriteLock的实现是基于AQS的。下文再从源码角度分析一下具体实现。
+ 
+ 
+ ---------------
+ 
+ 共性
+ 
+ 默认非公平锁
+ 可重入
+ 锁升级
+ 虚拟队列

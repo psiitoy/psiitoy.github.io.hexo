@@ -40,21 +40,46 @@ BusySpinWaitStrategy
 
 ---------------------------------------------
 
-给一个最简单的disruptor，single consumer single producer的实现，
-不需要同步锁：共享的变量：
-int volatile readBarrier;
-Data[] ring = new Data[A_BIG_NUMBER];
-Producer
- 线程:int writeCount;void produce(Data newItem) 
- {  ring[++writeCount % ring.size() ] = newItem;  readBarrier++;}
- Consumer 线程:void run() 
- {  int currentRead;  while (true) {   
-  if (readBarrier > currentRead) {       
-   consume (ring [ currentRead % ring.size() ];      
-     currentRead++;    }  }}
-     关键点在于：Consumer线程是只读的，所以理论上并不需要锁的参与，
-     只要控制好readBarrier增量的时机，而Consumer线程只要一直轮询这个变量即可。
+给一个最简单的disruptor，single consumer single producer的实现
 
+```java
+public class SimpleDisruptor {
+
+    volatile int readBarrier;  //不需要同步锁：共享的变量
+    Object[] ring = new Object[1024];
+
+    class Producer {
+        int writeCount;
+
+        void produce(Object newItem) {
+            ring[++writeCount % ring.length] = newItem;
+            readBarrier++;//只要控制好readBarrier增量的时机，而Consumer线程只要一直轮询这个变量即可
+        }
+    }
+
+    //关键点在于：Consumer线程是只读的，所以理论上并不需要锁的参与
+    class Consumer {
+
+        void run() {
+            int currentRead = 0;
+            while (true) {
+                if (readBarrier > currentRead) {
+                    consume(ring[currentRead % ring.length]);
+                    currentRead++;
+                }
+            }
+        }
+
+        private void consume(Object obj) {
+            //doSomething
+            System.out.println("##" + obj);
+        }
+    }
+
+}
+
+
+```
 
 ------------------------------------------
 
@@ -71,3 +96,5 @@ buffer(就是数组)做过优化防止JVM伪共享，lock free 是通过CAS自�
  number(每个reader都有私有的sequence number,记录自己消费到哪里了），保证不会outpace任何reader。
  写完后，要cas一个global的sequence number让写入内容可见。（if myseq == Gseq then Gseq ++ else retry).
  3每个reader有自己私有的sequence number, 读之前和Gseq比较避免超过writers.
+ 
+

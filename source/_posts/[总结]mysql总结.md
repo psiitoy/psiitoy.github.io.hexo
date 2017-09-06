@@ -207,18 +207,18 @@ OLAP（On-Line Analytical Processing，联机分析处理）是基于数据仓�
 
 ## 5.3 平衡二叉树
 
-![图5-2](/img/book/mysqlinnodb/5-2.png)
+![图5-2](https://psiitoy.github.io/img/book/mysqlinnodb/5-2.png)
 > 图5-2的平均查找次数(3+3+2+2+1)/6=2.3次。比顺序查找快（1+2+3+4+5+6）/6=3.3
  
-![图5-3](/img/book/mysqlinnodb/5-3.png)
+![图5-3](https://psiitoy.github.io/img/book/mysqlinnodb/5-3.png)
 > 图5-3的平均查找次数(1+2+3+4+5+6)/6=3.16次，和顺序查找差不多。效率就低了。
 
 - 因此若想最大性能的构造一个二叉查找树，需要树是平衡的，引出新的定义-平衡二叉树(AVL树)。
 - AVL树，左右两个子树高度差最大为1。
 - AVL树查询速度很快，但是维护成本非常大，通常需要1次或多次左旋和右旋来维护插入或更新后的平衡。
 
-![图5-4](/img/book/mysqlinnodb/5-4.png)
-![图5-5](/img/book/mysqlinnodb/5-5.png)
+![图5-4](https://psiitoy.github.io/img/book/mysqlinnodb/5-4.png)
+![图5-5](https://psiitoy.github.io/img/book/mysqlinnodb/5-5.png)
 > 图5-4和5-5例举了一颗AVL树插入一个新节点，需要做的旋转操作(具有一定开销)。更新、删除同理。AVL树多用于内存结构对象中，因此开销又相对较小。
 
 ## 5.4 B+树
@@ -226,16 +226,16 @@ OLAP（On-Line Analytical Processing，联机分析处理）是基于数据仓�
 - 为磁盘或者其他直接存储设备设计的一种平衡查找树
 - 所有记录节点都是按键值的大小顺序存放在同一层叶子节点中
 
-![图5-6](/img/book/mysqlinnodb/5-6.png)
+![图5-6](https://psiitoy.github.io/img/book/mysqlinnodb/5-6.png)
 > 图5-6 为一个B+树，其高度为2,每页可存放4条记录，扇出(fan out)为5，所有记录都在叶子节点中，且顺序存放。
 
 ### 5.4.1 B+树插入操作
-![表5-1](/img/book/mysqlinnodb/t5-1.png)
+![表5-1](https://psiitoy.github.io/img/book/mysqlinnodb/t5-1.png)
 
-![图5-7](/img/book/mysqlinnodb/5-7.png)
+![图5-7](https://psiitoy.github.io/img/book/mysqlinnodb/5-7.png)
 > 当前Leaf Page和Index Page 都没满，直接插入
 
-![图5-8](/img/book/mysqlinnodb/5-8.png)
+![图5-8](https://psiitoy.github.io/img/book/mysqlinnodb/5-8.png)
 > Leaf Page已经满了，Index Page没有慢，符合表5-1第二种，这时插入Leaf Page后的情况是50,55,60,65,70，根据中间值60拆分叶子节点，可得图5-8。
 
 
@@ -258,7 +258,7 @@ OLAP（On-Line Analytical Processing，联机分析处理）是基于数据仓�
 - 辅助索引不影响聚集索引的组织。每张表上可有多个辅助索引。
 - 通过辅助索引查数据，遍历辅助索引通过叶级别的指针获得指向主键索引的主键，然后通过主键索引找到完整记录。
 
-![图5-15](/img/book/mysqlinnodb/5-15.png)
+![图5-15](https://psiitoy.github.io/img/book/mysqlinnodb/5-15.png)
 
 > 举例来说，如果在一棵高度为3的辅助索引树中查找数据，那么需要遍历3次辅助树找到主键，然后如果聚集索引高度同样为3,
 那么还需要对聚集索引进行3次查找，才能最终找到一个完整的行数据所在的页。因此一共需要6次逻辑IO。

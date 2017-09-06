@@ -21,14 +21,20 @@ tags:
 * 数据元素相互之间的关系称为结构。有四类基本结构：集合、线性结构、树形结构、图状结构。
 
 1) 集合结构:
+
 * 一组`对象`，无其他特点。
+
 2) 线性结构:
+
 * 元素之间存在`一对一`关系常见类型有: 数组,链表,队列,栈。
 > 它们之间在操作上有所区别.例如:链表可在任意位置插入或删除元素,而队列在队尾插入元素,队头删除元素,栈只能在栈顶进行插入,删除操作.
 
 3) 树形结构:
+
 * 元素之间存在`一对多`关系,常见类型有:树(有许多特例:二叉树、平衡二叉树、查找树等)
+
 4) 图形结构:
+
 * 元素之间存在`多对多`关系,略。
 
 ### 1.2 java中的数据结构JCF(Java Collection Framework)特点
@@ -86,11 +92,9 @@ Map
 
 ![图 es5-uml1](https://psiitoy.github.io/img/blog/knowledge/datastructure/uml/jdk-map-concurrent.png)
 
-### 2.3 详解
+### 2.3 接口详解
 
-#### 2.3.1 接口详解
-
-##### Collection
+#### ***2.3.1 Collection***
 
 Iterable (可迭代，其实现类编译器代理实现了forEach语法糖，代理用户使用迭代器进行外部迭代)
 > 参见：[Java for-each循环解惑](http://www.importnew.com/11038.html)
@@ -130,7 +134,7 @@ ArrayBlockingQueue和LinkedBlockingQueue是两个最普通也是最常用的阻�
 
 [concurrent] BlockingDeque (双端阻塞队列)
 
-##### Map
+#### ***2.3.2 Map***
 
 Map (key value)
 > Map接口提供3种集合的视图，Map的内容可以被当作一组key集合，一组value集合，或者一组key-value映射。
@@ -139,9 +143,9 @@ SortedMap
 
 [concurrent] ConcurrentMap
 
-#### 2.3.2 实现详解
+### 2.4 实现详解
 
-##### List 
+#### ***2.4.1 List*** 
 
 1) ArrayList (动态数组，查找快o(1)，插入慢，允许null元素)
 > ArrayList实现了可变大小的数组。它允许所有元素，包括null。ArrayList没有同步。
@@ -173,7 +177,7 @@ LinkedList是基于链表实现，因此不需要维护容量大小，但是每�
 
 ------------
 
-##### Set
+#### ***2.4.2 Set***
 
 1) HashSet (基于HashMap实现，无序，根据哈希值查找Entry,能存一个null)
 
@@ -207,7 +211,7 @@ LinkedList是基于链表实现，因此不需要维护容量大小，但是每�
 
 ------------
 
-##### Queue    
+#### ***2.4.3 Queue***    
 
 1) PriorityQueue (内部用一个数组来保存元素，但数组是以堆的形式来组织的，因此是有序的。)
 > 堆(最小堆)的实现，优先级队列是不同于先进先出队列的另一种队列。每次从队列中取出的是具有最高优先权的元素。
@@ -273,7 +277,7 @@ public interface Delayed extends Comparable<Delayed> {
 
 ------------
 
-##### Map
+#### ***2.4.4 Map***
 
 1) HashMap (key和value允许为null)
 > 通过initial capacity和load factor两个参数调整性能。通常缺省的load factor 0.75较好地实现了时间和空间的均衡。增大load factor可以节省空间但相应的查找时间将增大，这会影响像get和put这样的操作。
@@ -320,7 +324,7 @@ TreeMap取出来的是排序后的键值对。插入、删除需要维护平衡�
 
 2) [concurrent] ConcurrentSkipListMap ...
 
-## 三、堆、栈、堆栈的区别
+## 三、堆-栈堆-栈的区别
 
 > 详情参见[Java虚拟机的堆、栈、堆栈如何去理解?](https://www.zhihu.com/question/29833675)
 
@@ -388,9 +392,11 @@ singletonList和singletonMap分别生成单元素的List和Map。
 ### 5.1 ArrayList vs LinkedList
 
 1) 底层实现
+
 * 数组 vs 链表
 
 2) 时间复杂度(前面是ArrayList)
+
 * get() O(1) vs O(n) (前者是RandomAccess，后者可以直接查头尾O(1))
 * add(E) 不稳定的O(1) vs O(1) (但是前者在到达容量时会面临扩容，所以不是O(1))
 * add(index,E) O(n) vs O(n) (前者是元素移动，后者是遍历)
@@ -400,14 +406,17 @@ singletonList和singletonMap分别生成单元素的List和Map。
 在末尾增加元素，只有在空间不足时才会进行数组扩容，大部分情况下追加操作效率还是比较高的(System.arraycopy()是native)。
 
 3) 对象与GC
+
 * 前者预留空间会浪费，后者每次都新增元素都要新建一个Node对象，并进行一系列赋值，在频繁系统调用中，对系统性能有一定影响。
 
 4) 共性
+
 * 非线程安全，允许null
 
 ### 5.2 ArrayBlockingQueue VS LinkedBlockingQueue
 
 1) 锁 
+
 * ArrayBlockingQueue的put和take共用一把锁，而LinkedBlockingQueue是各以用一把锁。
 > 意味着LinkedBlockingQueue可并行存取。(性能差异可不计Doug Lea)
 
@@ -437,12 +446,15 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E>
 ```
 
 2) 对象与GC 
+
 * ArrayBlockingQueue在插入或删除元素时不会产生或销毁任何额外的对象实例，
 而LinkedBlockingQueue则会生成一个额外的Node对象。
 
 3) 公平锁
+
 * ArrayBlockingQueue时，我们还可以控制对象的内部锁是否采用公平锁，默认采用非公平锁。
 
 4) 容量
+
 * 数组vs链表，ArrayBlockingQueue构造必须指定容量，LinkedBlockingQueue有空构造默认容量Integer.MAX_VALUE，
 后者有内存溢出的风险。
