@@ -28,7 +28,7 @@ Elasticsearch源码3(线程池)
 
 * 以下为JVM线程池
 
-```
+```java
     public static ExecutorService newFixedThreadPool(int nThreads) {
         return new ThreadPoolExecutor(nThreads, nThreads,
                                       0L, TimeUnit.MILLISECONDS,
@@ -49,7 +49,7 @@ Elasticsearch源码3(线程池)
 
 * 以下为ES线程池
 
-```
+```java
     public static EsThreadPoolExecutor newFixed(String name, int size, int queueCapacity, ThreadFactory threadFactory) {
         BlockingQueue<Runnable> queue;
         if (queueCapacity < 0) {
