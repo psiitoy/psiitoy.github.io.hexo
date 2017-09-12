@@ -8,7 +8,7 @@ tags:
     - es
 ---
 
-Elasticsearch源码3(线程池)
+本文对比的谈论了ES线程池(EsExecutors)和JVM线程池(Executors)的区别。
 
 <!--more-->
 

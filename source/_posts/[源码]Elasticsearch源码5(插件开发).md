@@ -17,9 +17,36 @@ tags:
 
 ### 1.1 什么是ES插件
 
-* elasticsearch拥有丰富的插件，而其灵活的插件开发机制让我们可以轻松的扩展我们自己想要的功能。(可能是没找到窍门，作者感觉debug过程确实比较痛，要发布打包，重启之类的操作)
+* elasticsearch拥有丰富的插件，而其灵活的插件开发机制让我们可以轻松的扩展我们自己想要的功能。
 
 * 对于Elasticsearch的plugin可以分为两类：jvm和site；其中site就是说要实现前端界面的，其他的都可以归纳到jvm这一类中
+
+### 1.2 插件调试与DEBUG
+
+* 作者感觉debug过程确实比较痛，要发布打包，重启之类的操作。(下面马上讲一个稍微方便一些的开发插件方式)
+  
+  + 更改`elasticsearch.yml`添加`path.plugins: /home/wangdi/{user_plugin_home}`
+  
+  + `{user_plugin_home}`可以直接设置成plugin的编译目录，这样打个包就直接能调试了。
+  
+  + 如果想同时调试多个插件，那么可以在`{user_plugin_home}`创建多个软链接。
+
+> 创建软链的命令
+
+```bash
+$ ~/zjj-esplugins$ ln -s /home/wangdi/IdeaWorkspace/middleware/elasticsearch2.1.2/plugins/jd-actionmonitor/target/releases/jd-actionmonitor-2.1.2-SNAPSHOT monitor
+
+$ ~/zjj-esplugins$ ln -s /home/wangdi/IdeaWorkspace/middleware/elasticsearch2.1.2/core/plugins/head  head
+
+```
+
+> 最终笔者`{user_plugin_home}`目录如下
+
+```bash
+$ ~/zjj-esplugins$ ls
+head  monitor
+
+```
 
 ### 1.2 举两个自己开发的Plugin例子
 
