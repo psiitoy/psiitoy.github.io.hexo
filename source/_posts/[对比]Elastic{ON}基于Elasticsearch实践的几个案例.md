@@ -8,7 +8,7 @@ tags:
     - es
 ---
 
-[对比]Elastic{ON}基于Elasticsearch实践的几个案例
+本文总结了 `苏宁`、`美团点评`、`58到家`、`百度` 在Elastic{ON}大会上分享的，基于Elasticsearch实践的几个案例。感谢这些热衷分享的工程师们的开源精神。
 
 <!--more-->
 
