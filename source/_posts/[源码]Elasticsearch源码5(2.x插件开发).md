@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[源码]Elasticsearch源码5(插件开发)"
+title: "[源码]Elasticsearch源码5(2.x插件开发)"
 date: 2017-08-12 21:15:06 
 categories: 
     - 源码
@@ -8,8 +8,8 @@ tags:
     - es
 ---
 
-本文重点讨论如何基于ActionFilter开发Filter类型的插件(同时拦截生效与Tcp,Http)，同时简述了ES插件开发流程。
 本文感谢[elasticsearch源码分析之plugin的开发](http://www.opscoder.info/es_plugin.html)的精彩介绍，又梳理了其他相关内容。
+以下讲述了基于maven构建的2.x版本es插件开发。重点讨论如何基于ActionFilter开发Filter类型的插件(同时拦截生效与Tcp,Http)，同时简述了插件开发简单流程。
 
 <!--more-->
 
@@ -48,7 +48,7 @@ head  monitor
 
 ```
 
-### 1.2 举两个自己开发的Plugin例子
+### 1.3 举两个自己开发的Plugin例子
 
 开发一个Rest类型的插件开发大概就是需要创建下面几个类。
 
@@ -283,7 +283,7 @@ public interface ActionFilter {
 - 注释:
   + 第一个apply是request的拦截方法
   
-  + 第二个apply是request的拦截方法
+  + 第二个apply是response的拦截方法
 
 > 而后我们看下 ActionFilter拦截的对象 TransportAction。
 
@@ -428,7 +428,9 @@ public abstract class TransportAction<Request extends ActionRequest, Response ex
   
   + code3 这里个人感觉就是一个异常逻辑，通常应该不会执行到。
   
-  + code4 request真正执行业务的同时会注册response的回调监听,在请求完成时会触发code6，进而执行code5(es rpc是通过异步回调实现的 参见> 详情参见[[源码]Elasticsearch源码2(通信机制之RPC)](https://psiitoy.github.io/2017/08/10/[%E6%BA%90%E7%A0%81]Elasticsearch%E6%BA%90%E7%A0%812(%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6%E4%B9%8BRPC)))。
+  + code4 request真正执行业务的同时会注册response的回调监听,在请求完成时会触发code6
+  
+  + code6进而执行code5(es rpc是通过异步回调实现的。ES的RPC详情参见 [[源码]Elasticsearch源码2(通信机制之RPC)](https://psiitoy.github.io/2017/08/10/[%E6%BA%90%E7%A0%81]Elasticsearch%E6%BA%90%E7%A0%812(%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6%E4%B9%8BRPC)))。
   
   + code5 对所有的response进行filter。同code1
   
@@ -467,6 +469,9 @@ public class ActionMonitorPlugin extends Plugin {
 
 - `code1` 插件初始化的源码分析(通过`PluginsService`进行初始化)
 
+> 以下截图为`PluginsService`中如何把自定义`Plugin`的`onModule`方法引用注入容器并在相应作用域启动时加载(`processModule()`)。
+加载作用域包括`Node`,`Index`,`Indices`。
+
 ![图 plugin1](https://psiitoy.github.io/img/blog/essourcecode/es-plugin1.png)
 
 ![图 plugin2](https://psiitoy.github.io/img/blog/essourcecode/es-plugin2.png)
@@ -475,7 +480,7 @@ public class ActionMonitorPlugin extends Plugin {
 
 ![图 plugin4](https://psiitoy.github.io/img/blog/essourcecode/es-plugin4.png)
 
-- ActionModule包含actionFilters中，就是包含我们此次开发的Filter集合
+- ActionModule的变量actionFilters中，就是我们此次开发的Filter集合
 
 ```java
 public class ActionModule extends AbstractModule {
@@ -529,7 +534,7 @@ public class ActionFilters {
 - 注:
   + `code2` 把我们开发的这一个`ActionMonitor`插件注入容器。 
   
-  + `code3` 把插件集合封装到一个Set中，对应的`code6``ActionFilters`的构造注入。
+  + `code3` 把插件集合封装到一个Set中，对应的`code6`中`ActionFilters`的构造注入。
   
   + `code4`，`ActionFilters`把全部filter类型的插件注入容器，单例。
   
