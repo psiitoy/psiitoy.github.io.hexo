@@ -17,9 +17,11 @@ tags:
 
 ### 1.1 什么是ES插件
 
-* elasticsearch拥有丰富的插件，而其灵活的插件开发机制让我们可以轻松的扩展我们自己想要的功能。
+- elasticsearch拥有丰富的插件，而其灵活的插件开发机制让我们可以轻松的扩展我们自己想要的功能。
 
-* 对于Elasticsearch的plugin可以分为两类：jvm和site；其中site就是说要实现前端界面的，其他的都可以归纳到jvm这一类中
+- 对于Elasticsearch的plugin可以分为两类：`jvm`和`site`；其中site就是说要实现前端界面的，其他的都可以归纳到`jvm`这一类中。
+  + `site:true`表示发布为网站形式，`_site`目录下的内容将会起作用。
+  + `jvm：true`表示设置的classname对应的类将会被加载，对于依赖的资源，配置等信息也需要打包成jar。 
 
 ### 1.2 插件调试与DEBUG
 

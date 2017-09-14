@@ -16,6 +16,8 @@ tags:
 
 ### 1.1 5.4 和 2.x 源码开发的差别
 
+* 构建方式从maven变成了gradle这个是最大的差别，而对于ES核心包的插件模块来说只是做了优化，对于开发者来说掌握了2.x的开发就可以迅速上手5.4.x的开发。
+
 ### 1.2 插件调试与DEBUG
 
 * 没有办法直接把编译后的发行版目录位置做软链挂载到配置文件了，只能自己编译后解压到`{ES_HOME}/plugins`文件夹下了。
@@ -24,7 +26,7 @@ tags:
    
 * `2.X`版本的ES插件加载目录获取
    
-```java  
+```java
 public class Environment{
     public Environment(Settings settings) {
         //...其他略
@@ -36,11 +38,11 @@ public class Environment{
     }
 }
               
-```    
+```
 
 * `5.4.3`版本的ES插件加载目录获取
 
-```java  
+```java
 public class Environment{
     public Environment(Settings settings) {
         //...其他略
@@ -48,7 +50,7 @@ public class Environment{
     }
 }
               
-``` 
+```
 
 - `code1` 生生被干掉了。。。so 只能老老实实 `assembly` then `copy`了。
 
@@ -145,7 +147,7 @@ ERROR: [1] bootstrap checks failed
 
 ```
 
-> elasticsearch.yml如下
+> elasticsearch.yml如下。详情参见:[elasticsearch.yml的配置属性官方解释](https://www.ibm.com/support/knowledgecenter/zh/SSFPJS_8.5.6/com.ibm.wbpm.main.doc/topics/rfps_esearch_configoptions.html)
 
 ```
 path.logs: /usr/share/elasticsearch5/logs
