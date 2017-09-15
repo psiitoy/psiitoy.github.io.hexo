@@ -8,7 +8,7 @@ tags:
     - es
 ---
 
-本文感谢[elasticsearch源码分析之plugin的开发](http://www.opscoder.info/es_plugin.html)的精彩介绍，又梳理了其他相关内容。
+本文感谢 [elasticsearch源码分析之plugin的开发](http://www.opscoder.info/es_plugin.html) 的精彩介绍，又梳理了其他相关内容。
 以下讲述了基于maven构建的2.x版本es插件开发。重点讨论如何基于ActionFilter开发Filter类型的插件(同时拦截生效与Tcp,Http)，同时简述了插件开发简单流程。
 
 <!--more-->
@@ -51,6 +51,8 @@ head  monitor
 ```
 
 ### 1.3 举两个自己开发的Plugin例子
+
+> 相关源码demo可参见 [es-plugin-demo](https://github.com/psiitoy/es-plugin-demo)
 
 开发一个Rest类型的插件开发大概就是需要创建下面几个类。
 

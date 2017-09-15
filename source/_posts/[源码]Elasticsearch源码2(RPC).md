@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[源码]Elasticsearch源码2(通信机制之RPC)"
+title: "[源码]Elasticsearch源码2(RPC)"
 date: 2017-08-10 20:15:06 
 categories: 
     - 源码
@@ -8,8 +8,7 @@ tags:
     - es
 ---
 
-整个源码阅读基于ElasticSearch5.4.3，学习过程中保持对文章的持续更新。
-本文讨论了ES中的远程调用
+本文讨论了ES中的远程调用`RPC`部分的源码实现。
 
 <!--more-->
 
