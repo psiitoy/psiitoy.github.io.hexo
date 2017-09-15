@@ -22,7 +22,7 @@ ES的分布式通信这块，主要是支持了RPC和REST两种模式（不支�
 
 ES是基于netty开发的rpc模块(http同样基于netty)，采用常规的基于`注册/回调`方式进行事件驱动的`reactor/proactor`模式(单线程调度，线程池处理)。
 > 题外话，ES作为分布式系统把每个行为都抽象成了Action对象，且采用注册回调的方式进行通信，它的调用基本都是异步的，所有调用全部依赖ES
-自己实现的线程池。话说这么多异步事件是不是可以直接抽象成Actor呢。用akka写岂不是很爽（或者用Quasar-actor纤程模型）。
+自己实现的线程池。话说这么多异步事件是不是可以直接抽象成Actor呢。（akka，或者quasar的纤程模型替代不知是否可以）。
 
 ![图 nettyyoudian](https://psiitoy.github.io/img/blog/essourcecode/nettyyoudian.png)
 
