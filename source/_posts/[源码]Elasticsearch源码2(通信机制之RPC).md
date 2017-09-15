@@ -13,12 +13,14 @@ tags:
 
 <!--more-->
 
-## 一、 前言
+## 一、前言
+
+### 1.1 关于ES RPC
 
 ES的分布式通信这块，主要是支持了RPC和REST两种模式（不支持大的package/stream的数据传输）。
 集群Node之间的通信，数据的传输，java客户端的请求调用(TransportClient)使用的均是RPC(TCP)。
 
-### 1 关于Netty
+### 1.2 关于Netty
 
 ES是基于netty开发的rpc模块(http同样基于netty)，采用常规的基于`注册/回调`方式进行事件驱动的`reactor/proactor`模式(单线程调度，线程池处理)。
 > 题外话，ES作为分布式系统把每个行为都抽象成了Action对象，且采用注册回调的方式进行通信，它的调用基本都是异步的，所有调用全部依赖ES
@@ -26,7 +28,9 @@ ES是基于netty开发的rpc模块(http同样基于netty)，采用常规的基�
 
 ![图 nettyyoudian](https://psiitoy.github.io/img/blog/essourcecode/nettyyoudian.png)
 
-## 2 一个最简单的例子
+## 二、ES RPC 源码分析
+
+### 2.1 一个简单例子说明过程
 
 首先上时序图，举最简单的例子引入话题，一次通过es的java Client Api进行Get请求调用(Tcp方式)。
 
@@ -40,7 +44,7 @@ ES是基于netty开发的rpc模块(http同样基于netty)，采用常规的基�
 
 > 关于RPC，这里有一篇文章写的很好[你应该知道的RPC原理](http://www.cnblogs.com/LBSer/p/4853234.html)
 
-## 3 ES中的RPC，源码部分
+### 2.2 ES中的RPC，源码部分
 
 由于是基于Netty，那么我们直接看源码
 
