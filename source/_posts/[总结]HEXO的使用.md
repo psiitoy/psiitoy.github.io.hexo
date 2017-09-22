@@ -68,20 +68,24 @@ cd psiitoy.github.io.hexo
 >   安装hexo
 
 ```bash
-$ npm install hexo --save
+$ npm install -g hexo
 
 
 ```
 
-
->   初始化hexo，添加git插件支持
+>   添加git插件支持
 
 ```bash
-$ hexo init --no-clone
 $ npm install hexo-deployer-git --save
 
 ```
 
+>   初始化hexo
+
+```bash
+$ hexo init --no-clone
+
+```
 
 >>  `hexo init`构建前项目结构_config.yml  package.json  scaffolds  source  themes
 >>  `hexo init`构建后项目结构_config.yml  package.json  scaffolds  source  themes  node_modules  public   db.json
