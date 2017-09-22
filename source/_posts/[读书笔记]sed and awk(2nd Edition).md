@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[读书笔记]sed & awk(2nd Edition)"
+title: "[读书笔记]sed and awk(2nd Edition)"
 date: 2017-09-22 23:15:06 
 categories: 
     - 读书笔记
@@ -9,8 +9,8 @@ tags:
     - awk
 ---
 
-[读书笔记]《sed & awk(2nd Edition)》
-![图 yuanzifuhuizong](https://psiitoy.github.io/img/book/sendandawk/sed&awk2nd.png)
+[读书笔记]《sed and awk(2nd Edition)》
+![图 yuanzifuhuizong](https://psiitoy.github.io/img/book/sendandawk/sedandawk2nd.png)
 
 <!--more-->
 
