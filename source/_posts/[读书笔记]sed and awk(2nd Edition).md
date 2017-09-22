@@ -10,7 +10,7 @@ tags:
 ---
 
 [读书笔记]《sed and awk(2nd Edition)》
-![图 yuanzifuhuizong](https://psiitoy.github.io/img/book/sendandawk/sedandawk2nd.png)
+![图 sedandawk2nd](https://psiitoy.github.io/img/book/sedandawk/sedandawk2nd.png)
 
 <!--more-->
 
@@ -262,9 +262,9 @@ California
 
 > 以下第三章 了解正则表达式语法
 
-![图 yuanzifuhuizong](https://psiitoy.github.io/img/book/sendandawk/yuanzifuhuizong.png)
+![图 yuanzifuhuizong](https://psiitoy.github.io/img/book/sedandawk/yuanzifuhuizong.png)
 
-![图 kuozhandeyuanzifu](https://psiitoy.github.io/img/book/sendandawk/kuozhandeyuanzifu.png)
+![图 kuozhandeyuanzifu](https://psiitoy.github.io/img/book/sedandawk/kuozhandeyuanzifu.png)
 
 随便测一个grep 查通配符的
 
@@ -304,7 +304,7 @@ ch02:.H1 "A Quick Tour"
 
 > 这个表达式匹配"任意后面有一个感叹号、问号、。。。随后是两个空格和任意一个字符的字符"，注意有三个`.`，最后一个前面有两个空格。
 
-![图 teshuzifu](https://psiitoy.github.io/img/book/sendandawk/teshuzifu.png)
+![图 teshuzifu](https://psiitoy.github.io/img/book/sedandawk/teshuzifu.png)
 
 [a\]1]
 
@@ -587,7 +587,7 @@ once you get to the end of the book, you can’t believe
 
 有用的正则表达式
 
-![图 yyzz1](https://psiitoy.github.io/img/book/sendandawk/yyzz1.png)
+![图 yyzz1](https://psiitoy.github.io/img/book/sedandawk/yyzz1.png)
 
 
 ----------------------
