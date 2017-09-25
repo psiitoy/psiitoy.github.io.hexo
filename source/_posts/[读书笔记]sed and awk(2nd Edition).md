@@ -16,18 +16,124 @@ tags:
 
 ## 一、前言
 
+> Linux文本处理三剑客
+
+### 1.1 grep
+
+#### 1. 基本语法
+
+- grep [-acinv] [--color=auto] '搜寻字符串' filename
+
+```
+-a ：将 binary 文件以 text 文件的方式搜寻数据
+-c ：计算找到 '搜寻字符串' 的次数
+-i ：忽略大小写的不同，所以大小写视为相同
+-n ：顺便输出行号
+-v ：反向选择，亦即显示出没有 '搜寻字符串' 内容的那一行！
+--color=auto ：可以将找到的关键词部分加上颜色的显示喔！
+
+```
+
+#### 2. 常用场景
+
+> 过滤
+
+```bash
+$ ls -l | grep -name
+$ cat test.txt | grep -v 123
+
+```
+
+### 1.2 sed
+
+#### 1. 基本语法
+
+- sed [options] script filename
+
+```
+-n ：只打印模式匹配的行
+
+-e ：多脚本运行，多点编辑,例如 -e script1 -e script2 -e script3
+
+-f ：将sed的动作写在一个文件内，用–f filename 执行filename内的sed动作
+
+-r ：支持扩展表达式
+
+-i ：直接修改文件内容
+
+```
+
+#### 2. 常用场景
+
+> 输出，替换，不对源文件改动，把整个文件(或匹配的)输入到屏幕。
+
+```bash
+
+# 输出文件test.txt的2~5行
+$ sed -n '2,5p' test.txt
+
+```
+
+### 1.3 awk
+
+#### 1. 基本语法
+
+- awk '{pattern + action}' filenames
+
+> 有三种方式调用awk
+
+- 1.命令行方式
+
+awk [-F  field-separator]  'commands'  input-file(s)
+
+其中，commands 是真正awk命令，[-F域分隔符]是可选的。 input-file(s) 是待处理的文件。
+在awk中，文件的每一行中，由域分隔符分开的每一项称为一个域。通常，在不指名-F域分隔符的情况下，默认的域分隔符是空格。
+ 
+- 2.shell脚本方式
+
+将所有的awk命令插入一个文件，并使awk程序可执行，然后awk命令解释器作为脚本的首行，一遍通过键入脚本名称来调用。
+
+相当于shell脚本首行的：#!/bin/sh
+可以换成：#!/bin/awk
+ 
+- 3.将所有的awk命令插入一个单独文件，然后调用：
+
+awk -f awk-script-file input-file(s)
+其中，-f选项加载awk-script-file中的awk脚本，input-file(s)跟上面的是一样的。
+
+
+#### 2. 常用场景，脚本处理等，awk 命令可以把文本分隔成若干部分，再通过 print 输出。
+
+```bash
+#输出网卡eth0的IP地址
+$ ifconfig eth0 | awk -F "[: ]+" 'NR==2 {print $4}'
+
+```
+
+- -F "[: ]+"
+  + -F          // 分隔多列
+  + "[: ]+"     // 用":"和" "同时作为分隔符,"+"表示匹配多个
+
+|第一列|第二列|第三列|第四列|第五列|...|
+|---|---|---|---|---|---|
+|空格|inet|addr|192.168.1.2|Bcast|...|
+  
 ## 二、精华
 
 > grep = g/re/p
+
+> 目前是第一次看此书，因为主要讲的是文本操作，所以以下章练习题为主。
 
 ## 三、练习题
 
 * 本章重点梳理书上的练习题
 
 -------------------------------
+### 3.1 第一章 强大的编译工具
 
-> 以下第二章 了解基本操作
+> 主要是一些场景介绍，略...
 
+### 3.2 第二章 了解基本操作
 
 ```bash
 John Daggett, 341 King Road, Plymouth MA
@@ -260,7 +366,7 @@ California
 
 ------------------------
 
-> 以下第三章 了解正则表达式语法
+### 3.3 第三章 了解正则表达式语法
 
 ![图 yuanzifuhuizong](https://psiitoy.github.io/img/book/sedandawk/yuanzifuhuizong.png)
 
@@ -592,7 +698,7 @@ once you get to the end of the book, you can’t believe
 
 ----------------------
 
-> 以下第四章 编写sed脚本
+### 3.4 第四章 编写sed脚本
 
 模式空间
 
@@ -832,3 +938,518 @@ $ runsed horsefeathers
 ```
 
 ##### 改变一组文件
+
+s/XXX /XXXX/g
+
+##### 提取宏定义
+
+##### 生成提纲
+
+##### 编辑工作转移
+
+------------------------------
+
+### 3.5 第五章 基本sed命令
+
+- sed命令由25个命令组成。本章我们介绍4个新的编辑命令:`d`(删除),`a`(追加),`i`(插入)和`c`(更改)。
+
+#### sed 命令的用法
+
+> 大多数sed命令接受逗号分割的两个地址。
+
+[address]command
+
+> 有一些只能接受单个行地址。
+
+[line-address]command
+
+> 用大括号进行分组以使其作用于同一个地址：
+
+address {
+command1
+command2
+command3
+}
+
+#### 注释
+
+> 注释，注释行的第一个字必须是"#"号。
+
+#[n]
+
+#### 替换
+
+[address]s/pattern/replacement/flags
+
+- 这里flags可以替换的是：
+  + `n` 1到512之间的一个数字，表明替换到第几个出现的位置。
+  + `g` 全局替换。如果没有`g`只替换第一个。
+  + `p` 打印模式空间的内容。
+  + `W file` 将模式空间的内容写到文件file中。不这么用。直接最后追加`> file`就可以
+  + Flag可以组合使用，只要有意义。如`gp`配合(静默模式`-n`选项)
+
+#### 删除
+
+/^$/d
+
+> 注意：不允许在被删除的行上进一步操作
+
+#### 追加、插入和更改
+
+- 追加`a`，插入`i`,更改`c`
+  + 提供了交互式编辑器(如vi)中所选的编辑功能。
+  + 不常用，因为它们必须多行来指定。
+  + 追加`a` 行后加
+  + 插入`i` 行前加
+  + 更改`c` 替换
+
+[line-address]a\
+    test 
+
+[line-address]i\
+    test
+        
+[line-address]c\
+    test        
+    
+#### 列表
+
+> 用`:l` 检测不可见字符
+
+```bash
+$ sed -n -e "l" test/spchar
+
+```
+
+#### 转换
+
+> 用大写替换所有小写
+
+y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/
+
+#### 打印
+
+#### 打印行号
+
+[line-address]=
+
+### 3.6 第六章 高级sed命令
+
+> 后面章节 ... 略
+
+
+### 3.7 第七章 编写AWK脚本
+
+> 等待输入，每输入一行打印一次，EOF退出（大多数系统CTRL-D）
+
+awk ' { print "Hello,world"}'
+
+> `BEGIN`模式用于指定第一个输入行之前要执行的动作。
+
+awk ' BEGIN { print "Hello,world"}'
+
+> 如果输入为空，那么打印"This is a blankline."
+
+awk '/^$/ { print "This is a blankline." }'
+
+> 同理
+
+```bash
+$ cat awkscr 
+/[0-9]+/ { print "That is an integer"}
+/[A-Za-z]+/ { print "This is a sting"}
+/^$/ { print "This is a blankline." }
+$ awk -f awkscr
+
+```
+
+> 在程序的任何地方都不能用单引号，否则shell将对它解释而导致错误。
+
+### 注释
+
+> awk注释以`#`开头，`换行符`结尾。可以在任意地方，不必从行首开始。
+
+### 字段和引用的分离
+
+```bash
+$ echo John Robinson 666-555-1111 > names
+$ awk ' {print $2,$1,$3}' names
+Robinson John 666-555-1111
+
+```
+
+> `-F`改变分隔符
+
+```bash
+$ awk -F"-" ' {print $2}' names
+555
+
+```
+
+> 打印
+
+```bash
+$ cat names 
+John Robinson, Koren Inc.,978 4th Ave.,Boston,MA 01760,696-0987
+Phyllis Chapman, GVE Corp.,34 Sea Drive, Amesbury,MA 01881,879-0900
+
+```
+
+```bash
+$ cat blocklist.awk
+{print "" # output blank line
+print $1
+print $2
+print $3
+print $4,$5
+}
+$ awk -F, -f blocklist.awk names
+John Robinson
+ Koren Inc.
+978 4th Ave.
+Boston MA 01760
+
+Phyllis Chapman
+ GVE Corp.
+34 Sea Drive
+ Amesbury MA 01881
+
+```
+
+> 用`BEGIN {FS=","}` 来改变分隔符
+
+```bash
+$ cat phonelist.awk 
+#
+BEGIN { FS=","}
+{print $1 ", " $6}
+$ awk -f phonelist.awk names
+John Robinson, 696-0987
+Phyllis Chapman, 879-0900
+
+```
+
+> 查找马塞诸塞州的。使用`~`来匹配正则，如下
+
+```bash
+$ awk -F"," '$5 ~ /MA/ {print $1 ", " $6}' names
+John Robinson, 696-0987
+Phyllis Chapman, 879-0900
+
+```
+
+指定多个字段分隔符
+
+> 每个制表符
+
+FS = "\t"   //code1
+
+> 一个或多个制表符
+
+FS = "\t+"  //code2
+
+> abc\t\tdef code1能分为3个字段，而code2只能分为2个字段
+
+> 3个字符之一都可以被解释为分隔符
+
+FS = "[':\t]"
+
+#### 表达式
+
+#### 打印空行数
+
+```bash
+# 统计空行数
+/^$/ {
+print ++x
+}
+
+```
+
+> 最后打印
+```bash
+#
+++x
+}
+END{
+print x
+}
+
+```
+
+#### 计算学生的平均成绩
+
+```bash
+# 求5个成绩的平均值
+{total = $2 + $3 + $4 + $5 + $6
+avg = total /5
+print $1, avg}
+
+```
+
+### 系统变量
+
+> 将上面求平均成绩的语句改写，加上`NR`，print NR ".",$1,avg
+
+```bash
+$ awk '{ total = $2 + $3 + $4 + $5 + $6
+avg = total /5
+print NR, $1, avg}' stus
+1 john 87.4
+2 andrea 86
+3 jasper 85.6
+
+```
+
+> 统计输入记录的个数`NR`，在`END`生成报告。
+
+```bash
+$ cat phonelist.awk         
+#
+BEGIN { FS=",*"}
+{print $1 ", " $6}
+END {print ""
+print NR, "crcords processed."}
+$ awk -f phonelist.awk names
+
+```
+
+* 当在`print`语句中使用逗号`,`分隔参数时，将产生输出字段分隔符`OFS`。`OFS`默认值是空格，所以输出`,`默认是空格。可以在BEGIN重新定义`OFS`。
+
+
+支票簿的结算
+
+```bash
+$ cat checkbook.test
+1000
+125 Market -125.45
+126 Hardware Store -34.95
+127 Video Store -7.45
+128 Book Store -14.32
+129 Gasoline -16.10
+
+$ cat checkbook.awk 
+BEGIN { FS = " " }
+#1 期望第一条记录为初始余额
+NR == 1 { print "Beginning Balance: \t" $1
+balance = $1
+next #取得下一条记录并结束
+}
+#2 应用与每个支票记录，将余额与数量相加。
+{ print $1, $2 ,$3
+balance += $3
+print balance  # 支票数额有负数
+}
+
+$ awk -f checkbook.awk checkbook.test
+Beginning Balance: 	1000
+125 Market -125.45
+874.55
+126 Hardware Store
+874.55
+127 Video Store
+874.55
+128 Book Store
+874.55
+129 Gasoline -16.10
+858.45
+
+```
+
+> 系统参数`NF==x`，记录必须是x个字段才处理。
+
+```bash
+$ awk 'NF==1 {print $1}' checkbook.test
+1000 
+$ awk 'NF==3 {print $1}' checkbook.test
+125 
+129 
+$ awk 'NF==4 {print $1}' checkbook.test
+126 
+127 
+128 
+
+```
+
+> 系统参数`NR > x`，当前记录号大于x才处理
+
+```bash
+$ awk 'NR>2 {print $1,$2}' checkbook.test
+126 Hardware
+127 Video
+128 Book
+129 Gasoline
+
+```
+
+#### 获取文件的信息
+
+ls -l $* |awk ' script'
+
+> 打印文件大小和名字
+
+```bash
+$ ls -l $* |awk ' {
+print $5, "\t", $9
+}'
+116 	 awkscr
+36 	 block.awk
+71 	 blocklist.awk
+289 	 checkbook.awk
+114 	 checkbook.test
+132 	 names
+93 	 phonelist.awk
+64 	 stus
+30 	 test
+13 	 test2
+
+```
+
+#### 格式化打印
+
+> 左对齐和右对齐
+
+```bash
+$ awk  '{printf("|%10s|\n", "hello")}' ;
+|     hello|
+$ awk  '{printf("|%-10s|\n", "hello")}' ;
+|hello     |
+
+```
+
+#### 向脚本传递参数
+
+awk ' script' var=value inputfile
+
+```bash
+$ awk -f scriptfile high=100 low=20 stus 
+100 20 john 85
+100 20 andrea 89
+100 20 jasper 84
+
+```
+
+> 使用脚本传递
+
+```bash
+cat awket.sh 
+#! /bin/sh
+awk -f scriptfile "high=$1" "low=$2" stus
+
+$ sh awket.sh 600 100
+600 100 john 85
+600 100 andrea 89
+600 100 jasper 84
+
+```
+
+> 使用反引号"`"来执行pwd命令赋值给high
+
+sh awket.sh `pwd` 100
+
+> 用命令行的方式，指定系统变量
+
+```bash
+$ awk '{print NR,$0}' OFS=' . ' names;
+1 . John Robinson, Koren Inc.,978 4th Ave.,Boston,MA 01760,696-0987
+2 . Phyllis Chapman, GVE Corp.,34 Sea Drive, Amesbury,MA 01881,879-0900
+
+```
+
+#### 信息的检索
+
+> 搜开头是xxx的记录。shell 参数传递 awk脚本。
+
+```bash
+$ cat acronyms 
+BASIC	Beginner's All-Purpose Symbolic Instruction Code
+CICS	Customer Information Control System
+COBOL	Common Business Orientated Language
+DBMS	Data Base Management System
+GIGO	Garbage in, garbage out
+GIRL	Generalized Information Retrieval Language
+NASA	National Aeronautic and Space Administration
+FAA	Federal Aviation Administration
+DOD	Department of Defense
+EOS	Earth Observing System
+USGCRP	U.S. Global Change Research Program
+NSF	National Science Foundation
+
+$ cat acro
+#! /bin/sh
+# 将shell的$1赋给awk的search变量
+awk ' $1 == search' search=$1 acronyms
+
+$ sh acro CICS
+CICS  Customer Information Control System
+  
+```
+
+------------------------
+
+### 3.8 第八章 条件、循环和数组
+
+#### 条件语句
+
+if(expression)
+    action
+[else action2]
+
+> 操作符`~`来测试匹配
+
+if (x ~ /[yY](es)?/) print x
+
+> 平均分65及格
+
+if(avg >= 65)
+    grade = "Pass"
+else
+    grade = "Fail"
+
+#### 条件操作符
+
+expr ? action1 : action2
+
+grade = (avg >= 65) ? "Pass" : "Fail"
+
+#### 循环
+
+#### While循环
+
+while(condition)
+    action
+    
+#### Do 循环
+
+do
+    action
+while(condition)
+    
+#### for 循环
+
+for ( set_counter; test_counter; increment_counter )
+    action
+    
+> 循环打印输入行的每一个字段
+
+for( i=1; i<=NF ;i++)
+    print $i
+
+> 循环打印输入行的每一个字段，排序，统计次数
+    
+awk '{for( i=1; i<=NF ;i++)
+    print $i}' acronyms |sort |uniq -c    
+    
+#### break continue,next,exit
+
+> next读下一个输入行，exit退出循环并移到END(如果存在)。
+
+#### 数组
+
+### 3.9 第九章 函数
+
+> todo
+
+### 3.10 第十章 底部抽屉
+
+> todo
