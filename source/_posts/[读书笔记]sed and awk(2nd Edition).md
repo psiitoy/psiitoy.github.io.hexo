@@ -16,7 +16,7 @@ tags:
 
 ## 一、前言
 
-> Linux文本处理三剑客
+> Linux文本处理三剑客`grep`，`sed`，`awk`
 
 ### 1.1 grep
 
