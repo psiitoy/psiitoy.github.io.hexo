@@ -38,7 +38,7 @@ tags:
 ## HDFS节点类型和Java类的对应
 >在hdfs文件中可以看到，传入的第一个参数对应着需要启动节点的类型，使用 hdfs cmd_case 根据节点类型可以找到对应需要执行的Java类，节点对应表如下。
 
-- namenode - org.apache.hadoop.hdfs.server.namenode.NameNode
-- datanode - org.apache.hadoop.hdfs.server.datanode.DataNode
-- secondarynamenode - org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode
-- journalnode - org.apache.hadoop.hdfs.qjournal.server.JournalNode
+- namenode org.apache.hadoop.hdfs.server.namenode.NameNode
+- datanode org.apache.hadoop.hdfs.server.datanode.DataNode
+- secondarynamenode org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode
+- journalnode org.apache.hadoop.hdfs.qjournal.server.JournalNode
