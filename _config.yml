@@ -71,7 +71,7 @@ deploy:
   type: git
   repo: git@github.com:psiitoy/psiitoy.github.io.git
   branch: master
-  message: test push hexo
+  message: push hexo
 
 # Header
 menu:
