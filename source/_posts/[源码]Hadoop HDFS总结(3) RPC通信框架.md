@@ -8,6 +8,8 @@ tags:
     - hadoop
 ---
 
+Hadoop HDFS RPC通信框架
+
 <!--more-->
 
 ---------------

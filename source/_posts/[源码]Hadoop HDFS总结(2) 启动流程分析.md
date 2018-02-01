@@ -8,6 +8,8 @@ tags:
     - hadoop
 ---
 
+Hadoop HDFS 启动流程分析
+
 <!--more-->
 
 ---------------
