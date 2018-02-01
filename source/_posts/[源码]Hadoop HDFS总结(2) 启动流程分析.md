@@ -9,6 +9,9 @@ tags:
 ---
 
 <!--more-->
+
+---------------
+
 ## HDFS的基础架构
 ![图2-1](https://psiitoy.github.io/img/blog/hadoop/hadoop-2-1.png)
 
