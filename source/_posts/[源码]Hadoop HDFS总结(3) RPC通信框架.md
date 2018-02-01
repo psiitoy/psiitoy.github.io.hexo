@@ -373,6 +373,7 @@ Client 有一个 connections 的 Connection 队列负责同各个节点的NameNo
 
 在 HDFS 中，心跳是单向的，总是由DataNode主动上报当前状态到NameNode中，因此对于心跳而言，NameNode是Server,DataNode是Client。
 
+## DataNode
 在前一篇文章中，我介绍了DataNode 在启动的时候，会构造一个 BlockPoolManager 对象，在 BlockPoolManager 中有一个  BPOfferService的集合对象。
 ```
     BPOfferService(List<InetSocketAddress> nnAddrs, List<InetSocketAddress> lifelineNnAddrs, DataNode dn) {
@@ -388,8 +389,106 @@ Client 有一个 connections 的 Connection 队列负责同各个节点的NameNo
         }
     }
 ```
+HDFS Federation是为解决HDFS单点故障而提出的NameNode水平扩展方案，该方案允许HDFS创建多个Namespace以提高集群的扩展性和隔离性。
+在Federation中新增了block-pool的概念，block-pool就是属于单个Namespace的一组block,每个DataNode为所有的block-pool存储block，可以理解block-pool是一个重新将block划分的逻辑概念，同一个DataNode中可以存储属于多个block-pool的多个block。
+每一个BPOfferService(block-pool/namespace)对应着一个 NameService , 对于 NameService 的每一个 NameNode(代表和NameService关联的active状态或者standby状态的NameNode) 节点，会对应 BPServiceActor 的Runnable类。在启动BPOfferService的时候，其实就是启动每一个BPServiceActor类。
+```
+void start() {
+    bpThread = new Thread(this, formatThreadName("heartbeating", nnAddr));
+    bpThread.start();
+}
 
-未完待续...
+@Override
+public void run() {
+    connectToNNAndHandshake();//连接NameNode
+    while (shouldRun()) {
+        offerService();//提供服务
+    }
+}
 
+private void offerService() throws Exception {
+    while (shouldRun()) {
+        final long startTime = scheduler.monotonicNow();
+         final boolean sendHeartbeat = scheduler.isHeartbeatDue(startTime);
+         HeartbeatResponse resp = null;
+         if (sendHeartbeat) {
+            resp = sendHeartBeat(requestBlockReportLease);
+         }
+         ....
+    }
+}
+```
+BPServiceActor类本身是一个Runnable的实现类，在线程循环中，先链接到NameNode ，再在 while 循环中不断offerService。
 
+在offerService中，通过 sendHeartBeat 进行周期性的心跳发送。
+```
+    private void connectToNNAndHandshake() throws IOException {
+        // get NN proxy
+        bpNamenode = dn.connectToNN(nnAddr);
+    
+        // First phase of the handshake with NN - get the namespace
+        // info.
+        NamespaceInfo nsInfo = retrieveNamespaceInfo();
+    
+        // Verify that this matches the other NN in this HA pair.
+        // This also initializes our block pool in the DN if we are
+        // the first NN connection for this BP.
+        bpos.verifyAndSetNamespaceInfo(this, nsInfo);
+        
+        // Second phase of the handshake with the NN.
+        register(nsInfo);
+    }
+    
+    // All heartbeat messages include following info:
+    // -- Datanode name
+    // -- data transfer port
+    // -- Total capacity
+    // -- Bytes remaining
+    HeartbeatResponse sendHeartBeat(boolean requestBlockReportLease)
+          throws IOException {
+        scheduler.scheduleNextHeartbeat();
+        scheduler.updateLastHeartbeatTime(monotonicNow());
+        return bpNamenode.sendHeartbeat(bpRegistration,
+            reports,
+            dn.getFSDataset().getCacheCapacity(),
+            dn.getFSDataset().getCacheUsed(),
+            dn.getXmitsInProgress(),
+            dn.getXceiverCount(),
+            numFailedVolumes,
+            volumeFailureSummary,
+            requestBlockReportLease);
+    }
+    
+    // DatanodeProtocolClientSideTranslatorPB.java
+    @Override
+    public HeartbeatResponse sendHeartbeat(DatanodeRegistration registration,
+          StorageReport[] reports, long cacheCapacity, long cacheUsed,
+          int xmitsInProgress, int xceiverCount, int failedVolumes,
+          VolumeFailureSummary volumeFailureSummary,
+          boolean requestFullBlockReportLease) throws IOException {
+      HeartbeatRequestProto.Builder builder = HeartbeatRequestProto.newBuilder()
+            .setRegistration(PBHelper.convert(registration))
+            .setXmitsInProgress(xmitsInProgress).setXceiverCount(xceiverCount)
+            .setFailedVolumes(failedVolumes)
+            .setRequestFullBlockReportLease(requestFullBlockReportLease);
+      resp = rpcProxy.sendHeartbeat(NULL_CONTROLLER, builder.build());
+      return new HeartbeatResponse(cmds, PBHelper.convert(resp.getHaStatus()),
+            rollingUpdateStatus, resp.getFullBlockReportLeaseId());
+    }
+```
+在connectToNNAndHandshake中，通过ProtobufRpcEngine::getProxy 获得一个bpNamenode 的RPC代理类，调用 bpNamenode.sendHeartbeat时，通过动态代理将消息通过 Client 发送出去。
+
+## NameNode
+DataNode发送了心跳之后，对应的NameNode会接收到一条对应的请求信息。
+
+通过走读代码，我们找到了同样实现 DatanodeProtocolService 接口的是DatanodeProtocolServerSideTranslatorPB 类。
+```
+public HeartbeatResponseProto sendHeartbeat(RpcController controller,
+      HeartbeatRequestProto request) throws ServiceException {
+  return namesystem.handleHeartbeat(nodeReg, report,
+        dnCacheCapacity, dnCacheUsed, xceiverCount, xmitsInProgress,
+        failedVolumes, volumeFailureSummary, requestFullBlockReportLease);
+}
+```
+在 DatanodeProtocolServerSideTranslatorPB::sendHeartbeat 中通过事件分发将心跳事件交给 FSNamesystem 进行消费，从而完成了 DataNode 和 NameNode 的心跳事件。
 
