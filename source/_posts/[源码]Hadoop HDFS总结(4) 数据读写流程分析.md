@@ -29,10 +29,53 @@ Hadoop HDFS 数据读写流程分析
 例如我们对 /abc/foo 构造一个快照 s0, 则 然后将 /abc/foo mv 到另一个路径 /xyz/bar，此时 /xyz/bar 和 /abc/.snapshot/s0/foo 虽然是不同的路径，但是对应着同一个 block 地址。
 
 ## HDFS的IO操作
+当通过客户端 hdfs dfs 命令进行文件 IO 操作时，会根据配置文件中 fs.defaultFS 的配置信息构造出一个 FileSystem 对象。具体的文件操作指令，通过 FileSystem 中对应的接口进行访问。
+
+对于客户端HDFS操作，他的默认 FileSystem 实现类是 DistributedFileSystem, 在 DistribtedFileSystem 中有一个 DFSClient 对象。这个对象使用前一篇文章中介绍的内部 RPC 通信机制，构造了一个 NameNode 的代理对象，负责同 NameNode 间进行 RPC 操作。
+
+## HDFS的文件写入流程
+![图4-2](https://psiitoy.github.io/img/blog/hadoop/hadoop-4-2.png)
+
+以 hadoop fs -put 操作为例:
+
+* 当接收到 PUT 请求时，尝试在 NameNode 中 create 一个新的 INode 节点，这个节点是根据 create 中发送过去的 src 路径构建出的目标节点,如果发现节点已存在或是节点的 parent 存在且不为 INodeDirectory 则异常中断，否则则返回包含 INode 信息的 HdfsFileStatus 对象。
+
+* 使用 HdfsFileStatus 构造一个实现了 OutputStream 接口的 DFSOutputStream 类，通过 nio 接口将需要传输的数据写入 DFSOutputStream。
+
+* 在 DFSOutputStream 中写入的数据被以一定的 size（一般是 64 k）封装成一个 DFSPacket,压入 DataStreamer 的传输队列中。
+
+* DataStreamer 是 Client 中负责数据传输的独立线程，当发现队列中有 DFSPacket 时，先通过 namenode.addBlock 从 NameNode 中获取可供传输的 DataNode 信息，然后同指定的 DataNode 进行数据传输。
+
+* DataNode 中有一个专门的 DataXceiverServer 负责接收数据，当有数据到来时，就进行对应的 writeBlock 写入操作，同时如果发现还有下游的 DataNode 同样需要接收数据，就通过管道再次将发来的数据转发给下游 DataNode，实现数据的备份，避免通过 Client 一次进行数据发送。
+
+整个操作步骤中的关键步骤有 NameNode::addBlock 以及 DataNode::writeBlock, 接下来会对这两步进行详细分析。
+
+## NameNode::addBlock解析
+
+在上面的数据模型中我们看到，对于一个 INodeFile 节点，我们可能会根据其数据大小将其拆分成多个 Block，因此当传输新文件或者文件传输尺寸已经超过 blockSize 的时候，就需要通过 addBlock 获取新的传输地址。
+
+NameNode 中 addBlock 的实现路径在 FSNamesystem::getAdditionalBlock 中，这里先通过 FSDirWriteFileOp::validateAddBlock 判断是否是因为延迟或异常问题导致的无效请求，如果不是，则通过 FSDirWriteFileOp.chooseTargetForNewBlock 选取新 Block 的目标 DataNode，
+
+chooseTargetForNewBlock 的具体算法由 BlockPlacementPolicy 完成，默认情况下会优先选择 client 自身所在机器作为 target，如果自身机器不是 DataNode，则会优先选择和当前机器处于同一机架( rack )中的 DataNode，以提升数据传输效率。
+
+官方放置策略解释：
+* The 1st replica is placed on the local machine, otherwise a random datanode. 
+* The 2nd replica is placed on a datanode that is on a different rack.
+* The 3rd replica is placed on a datanode which is on a different node of the rack as the second replica.
+
+确定写入的 DataNode 后，通过 FSDirWriteFileOp::storeAllocatedBlock 构造 Block 对象，并放入 src 对应的 INodeFile 中。
+
+## DataNode::writeBlock 解析
+
+DataNode 中的 DataXceiverServer 负责接收从 Client 发送来的数据传输请求。当有新的链接接通时，会构造一个 DataXceiver 线程进行数据接收。
+
+在 DataXceiver::writeBlock 中，如果发现 targets.length > 0，则说明还有下游的 DataNode 需要接收数据传输，这时候会和 Client 一样构造出一个链接到下游 DataNode 的 socket 链接，通过 new Sender(mirrorOut).writeBlock 将数据写入下游。
+
+
+## HDFS的文件读取流程
+![图4-3](https://psiitoy.github.io/img/blog/hadoop/hadoop-4-3.png)
 
 未完待续...
-
-
 
 
 
