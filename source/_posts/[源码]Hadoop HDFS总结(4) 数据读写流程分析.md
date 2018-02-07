@@ -75,14 +75,23 @@ DataNode 中的 DataXceiverServer 负责接收从 Client 发送来的数据传�
 ## HDFS的文件读取流程
 ![图4-3](https://psiitoy.github.io/img/blog/hadoop/hadoop-4-3.png)
 
-未完待续...
+hadoop fs -get操作：
+
+GET 操作的流程，相对于 PUT 会比较简单，先通过参数中的来源路径从 NameNode 对应 INode 中获取对应的 Block 位置，然后基于返回的 LocatedBlocks 构造出一个 DFSInputStream 对象。在 DFSInputStream 的 read 方法中，根据 LocatedBlocks 找到拥有 Block 的 DataNode 地址，通过 readBlock 从 DataNode 获取字节流。
 
 
+hadoop fs -mv 操作：
+
+MV 操作只涉及对文件名称或路径的更改，因此他的主要步骤集中在 NameNode 端，Client 端只是通过 RPC 调用 NameNode::rename
+![图4-4](https://psiitoy.github.io/img/blog/hadoop/hadoop-4-4.png)
+
+从活动图中我们看到，整个 rename 的操作分了两步，第一步是 removeSrc4OldRename，将 src 从 FSDirectory 中移除，第二步是 addSourceToDestination ，将之前移除的 src 的 INode，重新根据 dst 的路径添加到 FSDirectory 中，完成整个重命名流程。
 
 
+## 总结
 
+HDFS 中的文件 IO 操作主要是发生在 Client 和 DataNode 中。
 
+NameNode 作为整个文件系统的 Namesystem 负责管理整个文件系统的路径树，当需要新建文件或读取文件时，会从文件树中读取对应的路径节点的 Block 信息，发送回 Client 端。 Client 通过从返回数据中得到的 DataNode 和 Block 信息，直接从 DataNode 中进行数据读取。
 
-
-
-
+整个数据 IO 流程中，NameNode 只负责管理节点和 DataNode 的对应关系，涉及到 IO 操作的行为少，从而将整个文件传输压力从 NameNode 转移到了 DataNode 中。
