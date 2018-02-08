@@ -91,5 +91,17 @@ private Collection<Block> processReport(
                      toAdd, toRemove, toInvalidate, toCorrupt, toUC);
 }
 ```
+需要留意的是 FoldedTreeSet 是一个基于红黑树构造的 BlockReportReplica 遍历器，如果发现在 DataNode 端没有预先对 report 进行排序，则在这里会对 report 进行再次排序，方便在 reportDiffSorted 中对上报的 Block 信息进行筛选。
 
-未完待续...2018.2.7
+- 在 reportDiffSorted 中会对当前上报的 Block 进行分类，分别拆到不同的 List 中，其中：
+    1) toAdd: 被认为是正式数据，需要同 BlockInfo 进行关联的数据
+    2) toRemove: replica 的 blockId 比节点中的 blockId 更大，认为是无效数据
+    3) toInvalidate: 已经被 NameNode 移除的节点的 Replica 文件，需要通知 DataNode 移除数据
+    4) toCorrupt: 与其对应的 Block 对应的节点存在，但数据和节点中的描述数据存在差异，被认为是无效数据
+    5) toUC: 数据正处于写入过程中，等待后续写入完毕
+
+对上报的 Block 进行解析处理之后，会根据其具体类型作出对应的处理操作，所有数据处理完毕之后，整个 Storage 的 block 信息对于 NameNode 就是已知的。
+
+未完待续...
+
+
