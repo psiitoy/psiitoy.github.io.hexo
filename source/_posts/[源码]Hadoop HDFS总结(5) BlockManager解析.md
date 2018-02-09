@@ -102,6 +102,133 @@ private Collection<Block> processReport(
 
 对上报的 Block 进行解析处理之后，会根据其具体类型作出对应的处理操作，所有数据处理完毕之后，整个 Storage 的 block 信息对于 NameNode 就是已知的。
 
+## Heartbeat
+
+每次 DataNode 发送心跳后，都会在 HeartbeatManager 中更新其最近的访问时间，用以识别该节点仍旧存活。
+
+在 DatanodeDescriptor 中有多个集合，以 invalidateBlocks, replicateBlocks 为例，他们分别代表着已经废弃的 Block 和 需要向其他节点进行备份的 Block。 在更新完毕心跳信息后，会根据集合信息建立返回指令，告诉 DataNode 在本地节点需要做的行为操作，例如删除无效的 Block 以及向其他节点进行备份操作保证数据冗余度。
+
+同时在 HeartbeatManager 中还有一个 HeartbeatManager.Monitor 线程，通过轮询 heartCheck() 检测是否有 DataNode 过期。一旦发现有节点过期，则将其从 DatanodeManager 中移除，同时也会将其存储空间中的 Block 信息从对应节点中移除，避免无效访问。
+
+## Block 容灾备份
+
+为了避免由于节点异常导致的数据丢失， Hdfs 采取多地备份的策略，同时在多个 DataNode 中持有同一份数据。
+
+在 Hdfs 中多副本容灾的策略由两部分组成，首先是在文件首次创建时，通过数据管道同时在多个 DataNode 中创建 Block ，保证创建时就拥有多个副本；其次是在节点因为断开链接或则文件异常损坏的情况下，通过复制现有的副本文件到另一个节点中，保证副本的冗余度。
+
+第一点的数据管道在前一篇文章中已经做过介绍，在这里不再多说。第二点的副本复制策略是通过 RedundancyMonitor 线程进行实现的。
+```
+while (namesystem.isRunning()) {
+    // Process recovery work only when active NN is out of safe mode.
+    if (isPopulatingReplQueues()) {
+        computeDatanodeWork();
+        processPendingReconstructions();
+        rescanPostponedMisreplicatedBlocks();
+    }
+    TimeUnit.MILLISECONDS.sleep(redundancyRecheckIntervalMs);
+}
+
+```
+在RedundancyMonitor的循环中，主要执行了computeDatanodeWork、processPendingReconstructions、rescanPostponedMisreplicatedBlocks三个方法。
+
+## computeDatanodeWork
+```
+int computeDatanodeWork() {
+    int workFound = this.computeBlockReconstructionWork(blocksToProcess);
+    workFound += this.computeInvalidateWork(nodesToProcess);
+}
+```
+BlockManager 中有一个 LowRedundancyBlocks 对象负责记录那些副本数量较低的 Block 信息，在 LowRedundancyBlocks 中有一个 priorityQueues 的优先级队列，队列按照当前副本数量进行排列，急需备份的 Block 会被优先取出来中进行消费。
+
+这里我们需要知道，当前节点异常或某个 Storage 上保存的文件异常时，会对受到影响的 BlockInfo 进行分析，如果发现副本数量不足，则会加入 priorityQueues 队列中，等待节点进行备份。
+
+computeDatanodeWork 会先从 priorityQueues 取出指定个数的高优任务，将其加入 DatanodeDescriptor 的 replicateBlocks 集合中。然后再从 BlockManager.invalidateBlocks 中拿到被移除的无效文件的 Block 信息，加入 DatanodeDescriptor 的 invalidateBlocks 集合中。
+
+当 DataNode 发送心跳信息到 NameNode 时，会从对应的 DatanodeDescriptor 中取出 replicateBlocks 以及 invalidateBlocks，分别对应需要进行再次备份和已经无效的 Block 块，将其作为返回信息，返回给 DataNode 进行内部处理
+
+## processPendingReconstructions
+```
+    private void processPendingReconstructions() {
+        BlockInfo[] timedOutItems = pendingReconstruction.getTimedOutBlocks();
+        if (timedOutItems != null) {
+            namesystem.writeLock();
+            try {
+                for (int i = 0; i < timedOutItems.length; i++) {
+          /*
+           * Use the blockinfo from the blocksmap to be certain we're working
+           * with the most up-to-date block information (e.g. genstamp).
+           */
+                    BlockInfo bi = blocksMap.getStoredBlock(timedOutItems[i]);
+                    if (bi == null) {
+                        continue;
+                    }
+                    NumberReplicas num = countNodes(timedOutItems[i]);
+                    if (isNeededReconstruction(bi, num)) {
+                        neededReconstruction.add(bi, num.liveReplicas(),
+                                num.readOnlyReplicas(), num.outOfServiceReplicas(),
+                                getExpectedRedundancyNum(bi));
+                    }
+                }
+            } finally {
+                namesystem.writeUnlock();
+            }
+      /* If we know the target datanodes where the replication timedout,
+       * we could invoke decBlocksScheduled() on it. Its ok for now.
+       */
+        }
+    }
+```
+pendingReconstruction 中存放着一些 NameNode 认为正在进行数据生成的 Block 信息，如果长时间等待之后，发现 Block 的数据还没有生成完毕，就将对应的 Block 信息再次放入 pendingReconstruction 中，等待其他 DataNode 进行数据生成。
+
+## rescanPostponedMisreplicatedBlocks
+```
+    void rescanPostponedMisreplicatedBlocks() {
+        if (getPostponedMisreplicatedBlocksCount() == 0) {
+            return;
+        }
+        namesystem.writeLock();
+        long startTime = Time.monotonicNow();
+        long startSize = postponedMisreplicatedBlocks.size();
+        try {
+            Iterator<Block> it = postponedMisreplicatedBlocks.iterator();
+            for (int i = 0; i < blocksPerPostpondedRescan && it.hasNext(); i++) {
+                Block b = it.next();
+                it.remove();
+
+                BlockInfo bi = getStoredBlock(b);
+                if (bi == null) {
+                    LOG.debug("BLOCK* rescanPostponedMisreplicatedBlocks: " +
+                            "Postponed mis-replicated block {} no longer found " +
+                            "in block map.", b);
+                    continue;
+                }
+                //处理单个可能错误复制的块
+                MisReplicationResult res = processMisReplicatedBlock(bi);
+                LOG.debug("BLOCK* rescanPostponedMisreplicatedBlocks: " +
+                        "Re-scanned block {}, result is {}", b, res);
+                if (res == MisReplicationResult.POSTPONE) {
+                    rescannedMisreplicatedBlocks.add(b);
+                }
+            }
+        } finally {
+            postponedMisreplicatedBlocks.addAll(rescannedMisreplicatedBlocks);
+            rescannedMisreplicatedBlocks.clear();
+            long endSize = postponedMisreplicatedBlocks.size();
+            namesystem.writeUnlock();
+            LOG.info("Rescan of postponedMisreplicatedBlocks completed in {}" +
+                            " msecs. {} blocks are left. {} blocks were removed.",
+                    (Time.monotonicNow() - startTime), endSize, (startSize - endSize));
+        }
+    }
+```
+由于数据在多个节点中进行传输，无法实时在 NameNode 的内存中进行查看，因此有时候我们无法确定某些 Block 具体处于什么状态，此时就会返回一个 MisReplicationResult.POSTPONE 结果，将 Block 再次加入回等待队列，直到能够完全确定块状态，再在 processMisReplicatedBlock 中对其进行处理。
+
 未完待续...
+
+
+
+
+
+
 
 
